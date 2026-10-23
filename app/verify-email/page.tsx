@@ -126,11 +126,11 @@ export default function VerifyEmailPage() {
                     className="w-full max-w-md"
                 >
                     <Link
-                        href="/register"
+                        href="/login"
                         className="inline-flex items-center gap-2 text-slate-400 hover:text-white text-xs font-medium transition-colors mb-6"
                     >
                         <ArrowLeft size={14} />
-                        Back to registration
+                        Back to sign in
                     </Link>
 
                     <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 sm:p-10 shadow-2xl backdrop-blur-xl">
@@ -147,10 +147,10 @@ export default function VerifyEmailPage() {
                                             <MailCheck size={20} className="text-sky-400" />
                                         </div>
                                         <h2 className="text-2xl font-bold text-white tracking-tight">
-                                            Verify your email
+                                            Security Authorization
                                         </h2>
                                         <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                                            We sent a 6-digit confirmation code to your email. Enter it below to activate your KeyTrust Pay account.
+                                            Enter the 6-digit confirmation code dispatched to your registered email to verify your session and access KeyTrust Pay.
                                         </p>
                                     </div>
 

@@ -52,6 +52,11 @@ export default function AuthForm({ type }: { type: 'login' | 'register' }) {
             const endpoint = type === 'login' ? '/auth/login' : '/auth/register'
             const res = await api.post(endpoint, data)
             if (type === 'login') {
+                if (res.data.requiresVerification || res.data.requires2FA) {
+                    sessionStorage.setItem('verifyUserId', res.data.userId)
+                    router.push('/verify-email')
+                    return
+                }
                 setAuth(res.data, res.data.accessToken, res.data.refreshToken)
                 router.push(res.data.role === 'admin' ? '/admin' : '/dashboard')
             } else {
@@ -60,7 +65,7 @@ export default function AuthForm({ type }: { type: 'login' | 'register' }) {
                 router.push('/verify-email')
             }
         } catch (err: any) {
-            if (type === 'login' && err.response?.status === 403 && err.response?.data?.isUnverified) {
+            if (type === 'login' && (err.response?.data?.isUnverified || err.response?.data?.requiresVerification || err.response?.data?.requires2FA)) {
                 sessionStorage.setItem('verifyUserId', err.response.data.userId)
                 router.push('/verify-email')
                 return
