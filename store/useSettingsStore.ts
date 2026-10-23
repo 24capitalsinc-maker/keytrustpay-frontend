@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import axios from 'axios';
+import { getBaseApiUrl } from '@/lib/apiUrl';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const API_URL = getBaseApiUrl();
 
 interface SettingsState {
     settings: {

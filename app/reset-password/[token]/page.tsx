@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Lock, Shield, Loader2, CheckCircle2, AlertCircle, ArrowRight, Eye, EyeOff } from 'lucide-react'
 import Navbar from '@/components/Navbar'
+import { getBaseApiUrl } from '@/lib/apiUrl'
 
 const schema = z.object({
     password: z.string().min(8, 'Password must be at least 8 characters'),
@@ -36,7 +37,7 @@ export default function ResetPasswordPage() {
         setLoading(true)
         setError('')
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/auth/reset-password/${params.token}`, {
+            const response = await fetch(`${getBaseApiUrl()}/auth/reset-password/${params.token}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ password: data.password }),

@@ -6,6 +6,7 @@ import { Shield, CheckCircle2, Loader2, ArrowLeft, MailCheck } from 'lucide-reac
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import { useAuthStore } from '@/store/useAuthStore'
+import { getBaseApiUrl } from '@/lib/apiUrl'
 
 export default function VerifyEmailPage() {
     const router = useRouter()
@@ -64,7 +65,7 @@ export default function VerifyEmailPage() {
         setLoading(true)
         setError('')
         try {
-            const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
+            const apiBase = getBaseApiUrl()
             const res = await fetch(`${apiBase}/auth/verify-email`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -95,7 +96,7 @@ export default function VerifyEmailPage() {
         setError('')
         setSuccessMessage('')
         try {
-            const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
+            const apiBase = getBaseApiUrl()
             const res = await fetch(`${apiBase}/auth/resend-verification`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
