@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import Navbar from '@/components/Navbar'
 import AdminSidebar from '@/components/AdminSidebar'
 import SmoothSelect from '@/components/SmoothSelect'
@@ -8,7 +8,6 @@ import { toast } from 'sonner'
 import { Edit2, Save, X, Calendar, DollarSign, ArrowRightLeft, Search } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Pagination from '@/components/Pagination'
-import { useMemo } from 'react'
 
 export default function AdminTransactionsPage() {
     const [transactions, setTransactions] = useState<any[]>([])
@@ -28,7 +27,7 @@ export default function AdminTransactionsPage() {
             const res = await api.get('/admin/transactions')
             setTransactions(res.data)
         } catch (err) {
-            // Handled via UI
+            toast.error('Failed to load transaction ledger')
         } finally {
             setLoading(false)
         }
@@ -39,7 +38,7 @@ export default function AdminTransactionsPage() {
         setEditForm({
             amount: tx.amount,
             status: tx.status,
-            createdAt: tx.createdAt.split('T')[0] + 'T' + tx.createdAt.split('T')[1].substring(0, 5),
+            createdAt: tx.createdAt?.split('T')[0] + 'T' + tx.createdAt?.split('T')[1]?.substring(0, 5),
             type: tx.type,
             description: tx.description,
             sender: tx.sender?._id || tx.sender || '',
@@ -58,14 +57,14 @@ export default function AdminTransactionsPage() {
 
     const handleUpdate = async () => {
         try {
-            const payload = { ...editForm };
-            if (!payload.sender || payload.sender === '') delete payload.sender;
-            if (!payload.receiver || payload.receiver === '') payload.receiver = null;
+            const payload = { ...editForm }
+            if (!payload.sender || payload.sender === '') delete payload.sender
+            if (!payload.receiver || payload.receiver === '') payload.receiver = null
 
             const res = await api.put(`/admin/transactions/${editingTx._id}`, payload)
             setTransactions(transactions.map(t => t._id === editingTx._id ? { ...t, ...res.data } : t))
             setEditingTx(null)
-            toast.success('Transaction updated successfully')
+            toast.success('Transaction record updated successfully')
         } catch (err) {
             toast.error('Failed to update transaction.')
         }
@@ -95,92 +94,106 @@ export default function AdminTransactionsPage() {
     if (loading) return null
 
     return (
-        <div className="min-h-screen bg-primary flex flex-col font-sans selection:bg-gold/30">
+        <div className="min-h-screen bg-[#090D16] text-white flex flex-col font-sans">
             <Navbar />
 
             <div className="flex flex-1 pt-20">
                 <AdminSidebar />
                 <div className="flex-1 min-w-0 w-full overflow-hidden p-4 sm:p-6 md:p-10 lg:p-12 lg:pl-80 z-10">
-                    <header className="mb-14 border-b border-gold/10 pb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <header className="mb-10 border-b border-slate-800 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div>
-                            <div className="flex items-center gap-3 mb-4">
-                                <span className="text-[10px] text-red-500 font-bold uppercase tracking-[0.3em]">Protocol 00-TX</span>
-                                <div className="h-[1px] w-8 bg-red-500/20"></div>
+                            <div className="flex items-center gap-2 mb-3">
+                                <span className="text-xs text-cyan-400 font-semibold px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20">
+                                    Ledger Audit
+                                </span>
                             </div>
-                            <h1 className="text-3xl sm:text-4xl md:text-5xl font-light text-accent tracking-tighter">
-                                All <span className="text-red-500 font-medium">Transactions.</span>
+                            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+                                All <span className="text-cyan-400">Transactions.</span>
                             </h1>
-                            <p className="text-accent/40 mt-3 text-xs sm:text-sm tracking-wide font-light">Manual correction and oversight of the bank ledger.</p>
+                            <p className="text-slate-400 mt-2 text-sm font-normal">Monitor, audit, and correct platform transaction records.</p>
                         </div>
 
                         <div className="relative w-full md:w-80">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gold/40" size={16} />
+                            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
                             <input
                                 type="text"
-                                placeholder="Search by Entity or Reference..."
+                                placeholder="Search sender, receiver, or ref..."
                                 value={searchTerm}
                                 onChange={(e) => handleSearchChange(e.target.value)}
-                                className="w-full bg-primary-light/10 border border-gold/10 pl-11 pr-4 py-4 text-[10px] tracking-widest uppercase text-accent focus:outline-none focus:border-gold/30 transition-all"
+                                className="w-full bg-slate-900 border border-slate-800 focus:border-cyan-400 rounded-xl pl-10 pr-4 py-3 text-xs text-white placeholder:text-slate-500 outline-none transition-all"
                             />
                         </div>
                     </header>
 
-                    <div className="bg-primary-light/10 border border-gold/10 relative overflow-hidden">
-                        <div className="overflow-x-auto w-full no-scrollbar">
-                            <table className="w-full text-left border-collapse">
+                    <div className="rounded-3xl bg-slate-900/80 border border-slate-800 shadow-2xl backdrop-blur-xl overflow-hidden">
+                        <div className="overflow-x-auto w-full">
+                            <table className="w-full text-left">
                                 <thead>
-                                    <tr className="bg-gold/5 border-b border-gold/10 text-nowrap">
-                                        <th className="px-4 sm:px-10 py-6 text-[10px] font-bold uppercase tracking-[0.2em] text-accent/50 hidden sm:table-cell">Timestamp</th>
-                                        <th className="px-4 sm:px-10 py-6 text-[10px] font-bold uppercase tracking-[0.2em] text-accent/50">Sender / Receiver</th>
-                                        <th className="px-4 sm:px-10 py-6 text-[10px] font-bold uppercase tracking-[0.2em] text-accent/50 hidden lg:table-cell">Reference</th>
-                                        <th className="px-4 sm:px-10 py-6 text-[10px] font-bold uppercase tracking-[0.2em] text-accent/50 text-right">Amount</th>
-                                        <th className="px-4 sm:px-10 py-6 text-[10px] font-bold uppercase tracking-[0.2em] text-accent/50 text-center">Status</th>
-                                        <th className="px-4 sm:px-10 py-6 text-[10px] font-bold uppercase tracking-[0.2em] text-accent/50 text-center hidden md:table-cell">Jurisdiction</th>
-                                        <th className="px-4 sm:px-10 py-6 text-[10px] font-bold uppercase tracking-[0.2em] text-accent/50 text-right">Actions</th>
+                                    <tr className="bg-slate-950/60 border-b border-slate-800 text-xs font-semibold uppercase tracking-wider text-slate-400 text-nowrap">
+                                        <th className="px-6 py-4 hidden sm:table-cell">Date</th>
+                                        <th className="px-6 py-4">Sender / Recipient</th>
+                                        <th className="px-6 py-4 hidden lg:table-cell">Reference</th>
+                                        <th className="px-6 py-4 text-right">Amount</th>
+                                        <th className="px-6 py-4 text-center">Status</th>
+                                        <th className="px-6 py-4 text-center hidden md:table-cell">Type</th>
+                                        <th className="px-6 py-4 text-right">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gold/5">
+                                <tbody className="divide-y divide-slate-800/60">
                                     {currentTransactions.map((tx) => (
-                                        <tr key={tx._id} className="hover:bg-gold/[0.02] transition-all text-nowrap group">
-                                            <td className="px-4 sm:px-10 py-8 hidden sm:table-cell">
+                                        <tr key={tx._id} className="hover:bg-slate-800/30 transition-colors text-nowrap">
+                                            <td className="px-6 py-5 hidden sm:table-cell">
                                                 <div className="flex flex-col">
-                                                    <span className="text-accent font-light text-sm">{new Date(tx.createdAt).toLocaleDateString()}</span>
-                                                    <p className="text-[9px] text-accent/30 uppercase font-bold tracking-widest">Rotation ID: {tx._id.substring(0, 6)}</p>
+                                                    <span className="text-white text-xs">{new Date(tx.createdAt).toLocaleDateString()}</span>
+                                                    <span className="text-[11px] text-slate-500">{new Date(tx.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                                 </div>
                                             </td>
-                                            <td className="px-4 sm:px-10 py-8">
-                                                <div className="flex items-center gap-2 sm:gap-3">
+                                            <td className="px-6 py-5">
+                                                <div className="flex items-center gap-3">
                                                     <div className="flex flex-col">
-                                                        <span className="text-accent text-xs sm:text-sm font-light max-w-[80px] sm:max-w-none truncate">{tx.sender?.name || 'External'}</span>
-                                                        <span className="text-[8px] sm:text-[9px] text-gold/40 font-bold uppercase tracking-tighter">Source</span>
+                                                        <span className="text-white font-medium text-xs max-w-[120px] truncate">{tx.sender?.name || 'External Deposit'}</span>
+                                                        <span className="text-[10px] text-slate-500 uppercase">From</span>
                                                     </div>
-                                                    <ArrowRightLeft size={10} className="text-gold/20 flex-shrink-0" />
+                                                    <ArrowRightLeft size={12} className="text-slate-600 shrink-0" />
                                                     <div className="flex flex-col">
-                                                        <span className="text-accent text-xs sm:text-sm font-light max-w-[80px] sm:max-w-none truncate">{tx.receiver?.name || 'External'}</span>
-                                                        <span className="text-[8px] sm:text-[9px] text-gold/40 font-bold uppercase tracking-tighter">Dest</span>
+                                                        <span className="text-white font-medium text-xs max-w-[120px] truncate">{tx.receiver?.name || tx.receiverAccountNumber || 'External Outflow'}</span>
+                                                        <span className="text-[10px] text-slate-500 uppercase">To</span>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="px-4 sm:px-10 py-8 hidden lg:table-cell">
-                                                <span className="text-[10px] text-accent/40 font-mono tracking-widest">{tx.referenceNumber || 'TX-' + tx._id.substring(0, 8).toUpperCase()}</span>
+                                            <td className="px-6 py-5 hidden lg:table-cell">
+                                                <span className="text-xs font-mono text-slate-400">
+                                                    {tx.referenceNumber || tx.referenceId || 'TX-' + tx._id.substring(0, 8).toUpperCase()}
+                                                </span>
                                             </td>
-                                            <td className="px-4 sm:px-10 py-8 text-right">
-                                                <span className="text-accent font-light text-base sm:text-lg">${tx.amount.toLocaleString()}</span>
+                                            <td className="px-6 py-5 text-right">
+                                                <span className="font-mono font-semibold text-white text-sm">
+                                                    ${tx.amount?.toLocaleString()}
+                                                </span>
                                             </td>
-                                            <td className="px-4 sm:px-10 py-8 text-center text-[9px] sm:text-[10px] font-bold uppercase tracking-widest">
-                                                <span className={`${tx.status === 'success' ? 'text-green-500' : tx.status === 'pending' ? 'text-gold' : 'text-red-500'}`}>
+                                            <td className="px-6 py-5 text-center">
+                                                <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
+                                                    tx.status === 'success' 
+                                                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
+                                                        : tx.status === 'pending' 
+                                                            ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' 
+                                                            : 'bg-red-500/10 text-red-400 border border-red-500/20'
+                                                }`}>
                                                     {tx.status}
                                                 </span>
                                             </td>
-                                            <td className="px-4 sm:px-10 py-8 text-center hidden md:table-cell">
-                                                <span className="text-[10px] text-accent/60 font-medium tracking-widest uppercase">{tx.jurisdiction || tx.routingProtocol || 'Domestic'}</span>
+                                            <td className="px-6 py-5 text-center hidden md:table-cell">
+                                                <span className="text-xs text-slate-400 uppercase tracking-wider font-medium">
+                                                    {tx.routingProtocol || tx.type || 'Domestic'}
+                                                </span>
                                             </td>
-                                            <td className="px-4 sm:px-10 py-8 text-right">
+                                            <td className="px-6 py-5 text-right">
                                                 <button
                                                     onClick={() => handleEdit(tx)}
-                                                    className="p-2 sm:p-3 bg-gold/5 border border-gold/10 text-gold hover:bg-gold hover:text-primary transition-all duration-300"
+                                                    className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 transition-colors"
+                                                    title="Edit transaction"
                                                 >
-                                                    <Edit2 size={12} />
+                                                    <Edit2 size={14} />
                                                 </button>
                                             </td>
                                         </tr>
@@ -188,11 +201,13 @@ export default function AdminTransactionsPage() {
                                 </tbody>
                             </table>
                         </div>
-                        <Pagination
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            onPageChange={setCurrentPage}
-                        />
+                        <div className="p-4 border-t border-slate-800">
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={setCurrentPage}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -200,226 +215,99 @@ export default function AdminTransactionsPage() {
             {/* Edit Modal */}
             <AnimatePresence>
                 {editingTx && (
-                    <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 sm:p-12">
+                    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-8">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setEditingTx(null)}
-                            className="absolute inset-0 bg-primary/95 backdrop-blur-md"
+                            className="absolute inset-0 bg-slate-950/80 backdrop-blur-md"
                         />
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            initial={{ opacity: 0, scale: 0.95, y: 15 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="relative w-full max-w-4xl bg-primary border border-gold/20 p-10 shadow-[0_30px_60px_rgba(0,0,0,0.5)] max-h-[90vh] overflow-y-auto no-scrollbar"
+                            exit={{ opacity: 0, scale: 0.95, y: 15 }}
+                            className="relative w-full max-w-2xl rounded-3xl bg-slate-900 border border-slate-800 p-8 shadow-2xl max-h-[90vh] overflow-y-auto"
                         >
-                            <div className="flex justify-between items-start mb-10 pb-6 border-b border-gold/10">
+                            <div className="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
                                 <div>
-                                    <p className="text-[8px] text-gold font-medium uppercase tracking-widest mt-1 text-center md:text-left">Encryption [AES-256] Active</p>
-                                    <h2 className="text-3xl font-light text-accent tracking-tighter">Edit <span className="text-gold">Transfer.</span></h2>
+                                    <h2 className="text-xl font-bold text-white">Edit Transaction</h2>
+                                    <p className="text-xs text-slate-400">Ref: {editingTx.referenceNumber || editingTx._id}</p>
                                 </div>
-                                <button onClick={() => setEditingTx(null)} className="text-accent/30 hover:text-gold transition-colors">
-                                    <X size={24} />
+                                <button onClick={() => setEditingTx(null)} className="text-slate-400 hover:text-white">
+                                    <X size={20} />
                                 </button>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-                                {/* Monetary Section */}
-                                <div className="md:col-span-3 border-b border-gold/5 pb-2 mb-2">
-                                    <h4 className="text-[10px] text-gold font-bold uppercase tracking-[0.2em]">Monetary Details</h4>
-                                </div>
-                                <div className="space-y-3">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-accent/40 flex items-center gap-2">
-                                        <DollarSign size={12} /> Amount
-                                    </label>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-semibold text-slate-300">Amount ($)</label>
                                     <input
                                         type="number"
                                         value={editForm.amount}
                                         onChange={(e) => setEditForm({ ...editForm, amount: Number(e.target.value) })}
-                                        className="w-full bg-primary-light/10 border border-gold/10 p-4 text-accent text-lg font-light focus:outline-none focus:border-gold/40 transition-all"
+                                        className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-400 rounded-xl px-4 py-2.5 text-white font-mono text-sm outline-none"
                                     />
                                 </div>
-                                <div className="space-y-3">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-accent/40">Currency</label>
+
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-semibold text-slate-300">Currency</label>
                                     <input
                                         type="text"
                                         value={editForm.currency}
                                         onChange={(e) => setEditForm({ ...editForm, currency: e.target.value.toUpperCase() })}
-                                        className="w-full bg-primary-light/10 border border-gold/10 p-4 text-accent text-sm font-light focus:outline-none focus:border-gold/40 transition-all"
-                                        placeholder="USD"
-                                    />
-                                </div>
-                                <div className="space-y-3">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-accent/40 flex items-center gap-2">
-                                        <Calendar size={12} /> Timestamp
-                                    </label>
-                                    <input
-                                        type="datetime-local"
-                                        value={editForm.createdAt}
-                                        onChange={(e) => setEditForm({ ...editForm, createdAt: e.target.value })}
-                                        className="w-full bg-primary-light/10 border border-gold/10 p-4 text-accent text-sm font-light focus:outline-none focus:border-gold/40 transition-all"
+                                        className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-400 rounded-xl px-4 py-2.5 text-white text-sm outline-none uppercase"
                                     />
                                 </div>
 
-                                {/* Routing & Protocol */}
-                                <div className="md:col-span-3 border-b border-gold/5 pb-2 mb-2">
-                                    <h4 className="text-[10px] text-gold font-bold uppercase tracking-[0.2em]">Routing & Protocol</h4>
-                                </div>
-                                <div className="space-y-3">
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-semibold text-slate-300">Status</label>
                                     <SmoothSelect
-                                        label="Protocol"
-                                        value={editForm.routingProtocol}
-                                        options={[
-                                            { value: 'Domestic', label: 'Domestic Protocol' },
-                                            { value: 'International', label: 'International Wire' },
-                                            { value: 'Offshore', label: 'Offshore Settlement' },
-                                        ]}
-                                        onChange={(val) => setEditForm({ ...editForm, routingProtocol: val })}
-                                    />
-                                </div>
-                                <div className="space-y-3">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-accent/40">SWIFT / BIC</label>
-                                    <input
-                                        type="text"
-                                        value={editForm.swiftCode}
-                                        onChange={(e) => setEditForm({ ...editForm, swiftCode: e.target.value.toUpperCase() })}
-                                        className="w-full bg-primary-light/10 border border-gold/10 p-4 text-accent text-sm font-light focus:outline-none focus:border-gold/40 transition-all"
-                                        placeholder="BIC Code"
-                                    />
-                                </div>
-                                <div className="space-y-3">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-accent/40">IBAN / Target</label>
-                                    <input
-                                        type="text"
-                                        value={editForm.iban}
-                                        onChange={(e) => setEditForm({ ...editForm, iban: e.target.value.toUpperCase() })}
-                                        className="w-full bg-primary-light/10 border border-gold/10 p-4 text-accent text-sm font-light focus:outline-none focus:border-gold/40 transition-all"
-                                        placeholder="IBAN Identifier"
-                                    />
-                                </div>
-
-                                {/* Entity Links */}
-                                <div className="md:col-span-3 border-b border-gold/5 pb-2 mb-2">
-                                    <h4 className="text-[10px] text-gold font-bold uppercase tracking-[0.2em]">Entity Mapping</h4>
-                                </div>
-                                <div className="space-y-3">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-accent/40">Sender ID</label>
-                                    <input
-                                        type="text"
-                                        value={editForm.sender}
-                                        onChange={(e) => setEditForm({ ...editForm, sender: e.target.value })}
-                                        className="w-full bg-primary-light/10 border border-gold/10 p-4 text-accent text-[10px] font-mono focus:outline-none focus:border-gold/40 transition-all"
-                                    />
-                                </div>
-                                <div className="space-y-3">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-accent/40">Receiver ID</label>
-                                    <input
-                                        type="text"
-                                        value={editForm.receiver}
-                                        onChange={(e) => setEditForm({ ...editForm, receiver: e.target.value })}
-                                        className="w-full bg-primary-light/10 border border-gold/10 p-4 text-accent text-[10px] font-mono focus:outline-none focus:border-gold/40 transition-all"
-                                    />
-                                </div>
-                                <div className="space-y-3">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-accent/40">Target Account</label>
-                                    <input
-                                        type="text"
-                                        value={editForm.receiverAccountNumber}
-                                        onChange={(e) => setEditForm({ ...editForm, receiverAccountNumber: e.target.value })}
-                                        className="w-full bg-primary-light/10 border border-gold/10 p-4 text-accent text-sm font-light focus:outline-none focus:border-gold/40 transition-all"
-                                    />
-                                </div>
-
-                                {/* Ledger Identity */}
-                                <div className="md:col-span-3 border-b border-gold/5 pb-2 mb-2">
-                                    <h4 className="text-[10px] text-gold font-bold uppercase tracking-[0.2em]">Ledger Identity</h4>
-                                </div>
-                                <div className="space-y-3">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-accent/40">Reference ID</label>
-                                    <input
-                                        type="text"
-                                        value={editForm.referenceId}
-                                        onChange={(e) => setEditForm({ ...editForm, referenceId: e.target.value })}
-                                        className="w-full bg-primary-light/10 border border-gold/10 p-4 text-accent text-[10px] font-mono focus:outline-none focus:border-gold/40 transition-all"
-                                    />
-                                </div>
-                                <div className="md:col-span-1 space-y-3">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-accent/40 font-mono italic">Jurisdiction</label>
-                                    <input
-                                        type="text"
-                                        value={editForm.jurisdiction}
-                                        onChange={(e) => setEditForm({ ...editForm, jurisdiction: e.target.value })}
-                                        className="w-full bg-primary-light/10 border border-gold/10 p-4 text-accent text-sm font-light focus:outline-none focus:border-gold/40 transition-all"
-                                        placeholder="e.g. Switzerland"
-                                    />
-                                </div>
-                                <div className="space-y-3">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-accent/40">Detail Label Overlay</label>
-                                    <input
-                                        type="text"
-                                        value={editForm.detailLabel}
-                                        onChange={(e) => setEditForm({ ...editForm, detailLabel: e.target.value })}
-                                        className="w-full bg-primary-light/10 border border-gold/10 p-4 text-accent text-[10px] font-bold uppercase tracking-widest focus:outline-none focus:border-gold/40 transition-all"
-                                        placeholder="International // OUTBOUND"
-                                    />
-                                </div>
-                                <div className="space-y-3">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-accent/40">Value Label Overlay</label>
-                                    <input
-                                        type="text"
-                                        value={editForm.valueLabel}
-                                        onChange={(e) => setEditForm({ ...editForm, valueLabel: e.target.value })}
-                                        className="w-full bg-primary-light/10 border border-gold/10 p-4 text-accent text-[10px] font-bold uppercase tracking-widest focus:outline-none focus:border-gold/40 transition-all"
-                                        placeholder="USD // SETTLED"
-                                    />
-                                </div>
-                                <div className="space-y-3">
-                                    <SmoothSelect
-                                        label="Transaction Type"
-                                        value={editForm.type}
-                                        options={[
-                                            { value: 'debit', label: 'Debit Outflow' },
-                                            { value: 'credit', label: 'Credit Inflow' },
-                                        ]}
-                                        onChange={(val) => setEditForm({ ...editForm, type: val })}
-                                    />
-                                </div>
-                                <div className="space-y-3">
-                                    <SmoothSelect
-                                        label="Current Status"
+                                        label="Status"
                                         value={editForm.status}
                                         options={[
-                                            { value: 'pending', label: 'Pending Settlement' },
-                                            { value: 'success', label: 'Success / Finalized' },
-                                            { value: 'failed', label: 'Failed / Revoked' },
+                                            { value: 'success', label: 'Success / Settled' },
+                                            { value: 'pending', label: 'Pending Processing' },
+                                            { value: 'failed', label: 'Failed / Declined' },
                                         ]}
                                         onChange={(val) => setEditForm({ ...editForm, status: val })}
                                     />
                                 </div>
-                                <div className="md:col-span-2 space-y-3">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-accent/40">Ledger Description</label>
+
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-semibold text-slate-300">Transfer Type</label>
+                                    <SmoothSelect
+                                        label="Type"
+                                        value={editForm.type}
+                                        options={[
+                                            { value: 'debit', label: 'Debit (Outbound)' },
+                                            { value: 'credit', label: 'Credit (Inbound)' },
+                                        ]}
+                                        onChange={(val) => setEditForm({ ...editForm, type: val })}
+                                    />
+                                </div>
+
+                                <div className="space-y-1.5 md:col-span-2">
+                                    <label className="text-xs font-semibold text-slate-300">Description</label>
                                     <input
                                         type="text"
                                         value={editForm.description}
                                         onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
-                                        className="w-full bg-primary-light/10 border border-gold/10 p-4 text-accent text-sm font-light focus:outline-none focus:border-gold/40 transition-all"
+                                        className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-400 rounded-xl px-4 py-2.5 text-white text-sm outline-none"
                                     />
                                 </div>
                             </div>
 
                             <button
                                 onClick={handleUpdate}
-                                className="w-full bg-gold text-primary py-5 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-gold-dark transition-all duration-500 shadow-[0_10px_30px_rgba(203,161,110,0.2)] flex items-center justify-center gap-3"
+                                className="w-full bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-400 hover:to-sky-400 text-slate-950 py-3.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20"
                             >
-                                <Save size={16} />
-                                Commit Changes
+                                <Save size={16} /> Save Changes
                             </button>
                         </motion.div>
                     </div>
                 )}
             </AnimatePresence>
-
         </div>
     )
 }

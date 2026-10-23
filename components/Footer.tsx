@@ -1,101 +1,110 @@
 'use client'
 import Link from 'next/link'
 import { useSettingsStore } from '@/store/useSettingsStore'
-import { Shield, Mail, Phone, MapPin, Twitter, Linkedin, Instagram, Facebook } from 'lucide-react'
+import { Shield, Mail, MapPin, Twitter, Linkedin, Instagram, Facebook, Lock, Globe, CheckCircle2 } from 'lucide-react'
 
 export default function Footer() {
     const { settings } = useSettingsStore()
     const currentYear = new Date().getFullYear()
 
     return (
-        <footer className="bg-primary pt-16 md:pt-24 pb-12 border-t border-gold/10 relative overflow-hidden">
-            <div className="absolute inset-0 opacity-[0.02] pointer-events-none mix-blend-overlay" style={{ backgroundImage: "url('https://static.wixstatic.com/media/c837a6_51db7f706561479b9f9f7570f739e702~mv2.png')", backgroundSize: 'cover' }} />
-
-            <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-16 mb-20">
+        <footer className="bg-slate-950 pt-16 md:pt-20 pb-12 border-t border-slate-800/80 relative overflow-hidden">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12 mb-16">
                     {/* Brand Section */}
-                    <div className="space-y-8">
-                        <Link href="/" className="flex items-center gap-2 md:gap-3">
-                            <img
-                                src={settings?.logoUrl || '/logo.png'}
-                                alt={settings?.companyName || 'Optima Nexgen'}
-                                className="h-5 md:h-8 w-auto object-contain"
-                            />
-                            <span className="text-sm md:text-lg font-light tracking-[0.1em] md:tracking-[0.2em] text-accent uppercase">
-                                {settings?.logoText || 'Optima'}<span className="text-gold font-medium">{settings?.logoAccent || 'Nexgen'}</span>
-                            </span>
+                    <div className="space-y-5">
+                        <Link href="/" className="flex items-center gap-2.5">
+                            <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-blue-600 via-sky-500 to-cyan-400 p-[1.5px]">
+                                <div className="h-full w-full bg-slate-950 rounded-[6.5px] flex items-center justify-center">
+                                    <img src="/favicon.svg" alt="KeyTrust Pay" className="h-5 w-5" />
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <span className="text-base font-bold text-white tracking-tight">KeyTrust</span>
+                                <span className="px-1.5 py-0.5 rounded text-[9px] font-extrabold uppercase bg-sky-500/15 text-sky-400 border border-sky-500/30">
+                                    Pay
+                                </span>
+                            </div>
                         </Link>
-                        <p className="text-[10px] text-accent/40 uppercase leading-relaxed tracking-widest font-light max-w-xs">
-                            Modern, secure banking designed to make managing your money simple.
+                        <p className="text-xs text-slate-400 leading-relaxed max-w-xs font-normal">
+                            Modern, fast, and secure digital banking engineered for frictionless global payments, multi-currency accounts, and automated financial growth.
                         </p>
-                        <div className="flex items-center gap-6">
+                        <div className="flex items-center gap-4 text-slate-400">
                             {settings?.socialLinks?.twitter && (
-                                <Link href={settings.socialLinks.twitter} className="text-accent/30 hover:text-gold transition-colors"><Twitter size={14} /></Link>
+                                <Link href={settings.socialLinks.twitter} className="hover:text-sky-400 transition-colors"><Twitter size={16} /></Link>
                             )}
                             {settings?.socialLinks?.linkedin && (
-                                <Link href={settings.socialLinks.linkedin} className="text-accent/30 hover:text-gold transition-colors"><Linkedin size={14} /></Link>
+                                <Link href={settings.socialLinks.linkedin} className="hover:text-sky-400 transition-colors"><Linkedin size={16} /></Link>
                             )}
                             {settings?.socialLinks?.instagram && (
-                                <Link href={settings.socialLinks.instagram} className="text-accent/30 hover:text-gold transition-colors"><Instagram size={14} /></Link>
+                                <Link href={settings.socialLinks.instagram} className="hover:text-sky-400 transition-colors"><Instagram size={16} /></Link>
                             )}
                             {settings?.socialLinks?.facebook && (
-                                <Link href={settings.socialLinks.facebook} className="text-accent/30 hover:text-gold transition-colors"><Facebook size={14} /></Link>
+                                <Link href={settings.socialLinks.facebook} className="hover:text-sky-400 transition-colors"><Facebook size={16} /></Link>
                             )}
                         </div>
                     </div>
 
-                    {/* Quick Protocols */}
-                    <div className="space-y-8">
-                        <h4 className="text-[10px] font-bold text-gold uppercase tracking-[0.4em]">Services</h4>
-                        <ul className="space-y-4">
-                            <li><Link href="/business" className="text-[10px] text-accent/50 hover:text-gold transition-colors uppercase tracking-widest">Business Banking</Link></li>
-                            <li><Link href="/personal" className="text-[10px] text-accent/50 hover:text-gold transition-colors uppercase tracking-widest">Personal Banking</Link></li>
-                            <li><Link href="/cards" className="text-[10px] text-accent/50 hover:text-gold transition-colors uppercase tracking-widest">Cards</Link></li>
-                            <li><Link href="/loans" className="text-[10px] text-accent/50 hover:text-gold transition-colors uppercase tracking-widest">Loans</Link></li>
+                    {/* Products */}
+                    <div className="space-y-4">
+                        <h4 className="text-xs font-semibold text-white uppercase tracking-wider">Products & Services</h4>
+                        <ul className="space-y-2.5 text-xs text-slate-400">
+                            <li><Link href="/personal" className="hover:text-sky-400 transition-colors">Personal Accounts</Link></li>
+                            <li><Link href="/business" className="hover:text-sky-400 transition-colors">Business Banking</Link></li>
+                            <li><Link href="/cards" className="hover:text-sky-400 transition-colors">Virtual & Physical Cards</Link></li>
+                            <li><Link href="/loans" className="hover:text-sky-400 transition-colors">Credit & Working Capital</Link></li>
+                            <li><Link href="/transfer" className="hover:text-sky-400 transition-colors">Instant Global Transfers</Link></li>
                         </ul>
                     </div>
 
-                    {/* Support Node */}
-                    <div className="space-y-8">
-                        <h4 className="text-[10px] font-bold text-gold uppercase tracking-[0.4em]">Help</h4>
-                        <ul className="space-y-4">
-                            <li><Link href="/support" className="text-[10px] text-accent/50 hover:text-gold transition-colors uppercase tracking-widest">Support</Link></li>
-                            <li><Link href="/contact" className="text-[10px] text-accent/50 hover:text-gold transition-colors uppercase tracking-widest">Contact Us</Link></li>
+                    {/* Support & Company */}
+                    <div className="space-y-4">
+                        <h4 className="text-xs font-semibold text-white uppercase tracking-wider">Help & Resources</h4>
+                        <ul className="space-y-2.5 text-xs text-slate-400">
+                            <li><Link href="/support" className="hover:text-sky-400 transition-colors">Help Center & FAQ</Link></li>
+                            <li><Link href="/contact" className="hover:text-sky-400 transition-colors">Contact Support</Link></li>
+                            <li><Link href="/privacy" className="hover:text-sky-400 transition-colors">Security & Privacy</Link></li>
+                            <li><Link href="/terms" className="hover:text-sky-400 transition-colors">Terms of Service</Link></li>
                         </ul>
                     </div>
 
-                    {/* Contact Section */}
-                    <div className="space-y-8">
-                        <h4 className="text-[10px] font-bold text-gold uppercase tracking-[0.4em]">Contact</h4>
-                        <div className="space-y-6">
-                            <div className="flex items-start gap-4">
-                                <Mail size={14} className="text-gold/40 mt-1" />
+                    {/* Contact & Security Badges */}
+                    <div className="space-y-4">
+                        <h4 className="text-xs font-semibold text-white uppercase tracking-wider">Get in Touch</h4>
+                        <div className="space-y-3 text-xs text-slate-400">
+                            <div className="flex items-start gap-2.5">
+                                <Mail size={15} className="text-sky-400 mt-0.5 shrink-0" />
                                 <div>
-                                    <p className="text-[10px] text-accent font-light tracking-wide">{settings?.supportEmail || 'support@optimanexgen.org'}</p>
-                                    <p className="text-[8px] text-accent/30 uppercase mt-1 tracking-widest font-bold">Email Support</p>
+                                    <p className="text-slate-300 font-medium">{settings?.supportEmail || 'support@keytrustpay.org'}</p>
+                                    <p className="text-[11px] text-slate-500">24/7 Priority Desk</p>
                                 </div>
                             </div>
-                            <div className="flex items-start gap-4">
-                                <MapPin size={14} className="text-gold/40 mt-1" />
+                            <div className="flex items-start gap-2.5">
+                                <Globe size={15} className="text-sky-400 mt-0.5 shrink-0" />
                                 <div>
-                                    <p className="text-[10px] text-accent font-light tracking-wide">Main Office</p>
-                                    <p className="text-[8px] text-accent/30 uppercase mt-1 tracking-widest font-bold">Head Office</p>
+                                    <p className="text-slate-300 font-medium">Worldwide Coverage</p>
+                                    <p className="text-[11px] text-slate-500">180+ Countries Supported</p>
                                 </div>
+                            </div>
+                        </div>
+
+                        {/* Security Pill */}
+                        <div className="pt-2">
+                            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px]">
+                                <Lock size={12} />
+                                <span className="font-medium">256-Bit Bank-Grade Encryption</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="pt-12 border-t border-gold/5 flex flex-col md:flex-row justify-between items-center gap-8">
-                    <div className="flex items-center gap-4">
-                        <Shield size={16} className="text-gold/20" />
-                        <p className="text-[9px] text-accent/30 uppercase tracking-[0.3em] font-medium">
-                            &copy; {currentYear} {settings?.companyName || 'optimanexgen'}. All rights reserved.
-                        </p>
-                    </div>
-                    <div className="flex items-center gap-10">
-                        <Link href="/privacy" className="text-[8px] text-accent/20 hover:text-accent/50 transition-colors uppercase tracking-[0.4em] font-bold">Privacy Policy</Link>
-                        <Link href="/terms" className="text-[8px] text-accent/20 hover:text-accent/50 transition-colors uppercase tracking-[0.4em] font-bold">Terms of Service</Link>
+                <div className="pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+                    <p>
+                        &copy; {currentYear} {settings?.companyName || 'KeyTrust Pay'}. All rights reserved.
+                    </p>
+                    <div className="flex items-center gap-6">
+                        <Link href="/privacy" className="hover:text-slate-400 transition-colors">Privacy Policy</Link>
+                        <Link href="/terms" className="hover:text-slate-400 transition-colors">Terms & Disclosures</Link>
                     </div>
                 </div>
             </div>

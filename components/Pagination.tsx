@@ -12,7 +12,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
 
     const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
 
-    // Helper to determine which pages to show (basic implementation)
+    // Helper to determine which pages to show
     const visiblePages = pages.filter(page => {
         if (totalPages <= 7) return true
         if (page === 1 || page === totalPages) return true
@@ -21,16 +21,17 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
     })
 
     return (
-        <div className="flex items-center justify-between px-6 md:px-10 py-6 border-t border-gold/10 bg-gold/[0.02]">
-            <p className="text-[10px] font-bold text-accent/30 uppercase tracking-[0.2em]">
-                Showing Page <span className="text-gold">{currentPage}</span> of <span className="text-gold">{totalPages}</span>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-6 py-4 border-t border-slate-800/80 bg-slate-900/40">
+            <p className="text-xs text-slate-400">
+                Page <span className="text-cyan-400 font-semibold">{currentPage}</span> of <span className="text-slate-200 font-semibold">{totalPages}</span>
             </p>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
                 <button
                     onClick={() => onPageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="w-10 h-10 border border-gold/10 flex items-center justify-center text-gold/40 hover:text-gold hover:border-gold/30 disabled:opacity-20 disabled:hover:text-gold/40 disabled:hover:border-gold/10 transition-all"
+                    className="w-9 h-9 rounded-lg border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-slate-700 hover:bg-slate-800/60 disabled:opacity-30 disabled:pointer-events-none transition-all"
+                    aria-label="Previous page"
                 >
                     <ChevronLeft size={16} />
                 </button>
@@ -42,14 +43,15 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
 
                         return (
                             <div key={page} className="flex items-center gap-1">
-                                {showEllipsis && <span className="text-accent/20 px-1">...</span>}
+                                {showEllipsis && <span className="text-slate-600 px-1 text-xs">...</span>}
                                 {isVisible && (
                                     <button
                                         onClick={() => onPageChange(page)}
-                                        className={`w-10 h-10 text-[10px] font-bold uppercase tracking-widest transition-all ${currentPage === page
-                                                ? 'bg-gold text-primary border border-gold'
-                                                : 'text-accent/40 border border-gold/5 hover:border-gold/20 hover:text-accent'
-                                            }`}
+                                        className={`w-9 h-9 rounded-lg text-xs font-medium transition-all ${
+                                            currentPage === page
+                                                ? 'bg-cyan-500 text-slate-950 font-semibold shadow-md shadow-cyan-500/20'
+                                                : 'text-slate-400 hover:text-white hover:bg-slate-800/70 border border-slate-800/80'
+                                        }`}
                                     >
                                         {page}
                                     </button>
@@ -62,7 +64,8 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
                 <button
                     onClick={() => onPageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="w-10 h-10 border border-gold/10 flex items-center justify-center text-gold/40 hover:text-gold hover:border-gold/30 disabled:opacity-20 disabled:hover:text-gold/40 disabled:hover:border-gold/10 transition-all"
+                    className="w-9 h-9 rounded-lg border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-slate-700 hover:bg-slate-800/60 disabled:opacity-30 disabled:pointer-events-none transition-all"
+                    aria-label="Next page"
                 >
                     <ChevronRight size={16} />
                 </button>

@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar'
 import AdminSidebar from '@/components/AdminSidebar'
 import api from '@/lib/api'
 import { motion } from 'framer-motion'
-import { Save, AlertTriangle, ShieldCheck, Globe, Mail, Share2, Info } from 'lucide-react'
+import { Save, AlertTriangle, ShieldCheck, Globe, Mail, Share2, Info, Building } from 'lucide-react'
 
 export default function GovernancePage() {
     const [settings, setSettings] = useState<any>(null)
@@ -33,7 +33,7 @@ export default function GovernancePage() {
         setMessage({ type: '', text: '' })
         try {
             await api.put('/admin/settings', settings)
-            setMessage({ type: 'success', text: 'Settings updated successfully.' })
+            setMessage({ type: 'success', text: 'System settings saved successfully.' })
         } catch (err) {
             setMessage({ type: 'error', text: 'Failed to save system settings.' })
         } finally {
@@ -67,33 +67,34 @@ export default function GovernancePage() {
     if (loading) return null
 
     return (
-        <div className="min-h-screen bg-primary flex flex-col font-sans selection:bg-gold/30">
+        <div className="min-h-screen bg-[#090D16] text-white flex flex-col font-sans">
             <Navbar />
 
             <div className="flex flex-1 pt-20">
                 <AdminSidebar />
                 <div className="flex-1 min-w-0 w-full overflow-hidden p-4 sm:p-6 md:p-10 lg:p-12 lg:pl-80 z-10">
-                    <header className="mb-14 border-b border-gold/10 pb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <header className="mb-10 border-b border-slate-800 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div>
-                            <div className="flex items-center gap-3 mb-4">
-                                <span className="text-[10px] text-red-500 font-bold uppercase tracking-[0.3em]">System Admin</span>
-                                <div className="h-[1px] w-8 bg-red-500/20"></div>
+                            <div className="flex items-center gap-2 mb-3">
+                                <span className="text-xs text-cyan-400 font-semibold px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20">
+                                    System Settings
+                                </span>
                             </div>
-                            <h1 className="text-3xl sm:text-4xl md:text-5xl font-light text-accent tracking-tighter">
-                                System <span className="text-red-500 font-medium">Settings.</span>
+                            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+                                Platform <span className="text-cyan-400">Governance.</span>
                             </h1>
-                            <p className="text-accent/40 mt-3 text-xs sm:text-sm tracking-wide font-light">Global system overrides and bank identity management.</p>
+                            <p className="text-slate-400 mt-2 text-sm font-normal">Manage brand identity, support channels, maintenance status, and registrations.</p>
                         </div>
 
                         <button
                             onClick={handleSave}
                             disabled={saving}
-                            className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-all flex items-center gap-3 shadow-[0_10px_20px_rgba(220,38,38,0.2)] disabled:opacity-50"
+                            className="bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-400 hover:to-sky-400 text-slate-950 font-semibold px-6 py-3 rounded-xl text-xs uppercase tracking-wider transition-all flex items-center gap-2 shadow-lg shadow-cyan-500/20 disabled:opacity-50"
                         >
-                            {saving ? 'Synchronizing...' : (
+                            {saving ? 'Saving...' : (
                                 <>
-                                    <Save size={14} />
-                                    Commit Changes
+                                    <Save size={16} />
+                                    Save Changes
                                 </>
                             )}
                         </button>
@@ -103,186 +104,180 @@ export default function GovernancePage() {
                         <motion.div
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className={`mb-10 p-5 border text-xs tracking-widest uppercase font-bold ${message.type === 'success' ? 'bg-green-500/5 border-green-500/20 text-green-400' : 'bg-red-500/5 border-red-500/20 text-red-400'
-                                }`}
+                            className={`mb-8 p-4 rounded-xl border text-xs font-semibold ${
+                                message.type === 'success' 
+                                    ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' 
+                                    : 'bg-red-500/10 border-red-500/20 text-red-400'
+                            }`}
                         >
                             {message.text}
                         </motion.div>
                     )}
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         {/* Operational State */}
-                        <div className="space-y-6 sm:space-y-10">
-                            <section className="bg-primary-light/10 border border-gold/10 p-6 sm:p-10 relative overflow-hidden group">
-                                <div className="absolute top-0 left-0 w-8 h-[1px] bg-red-500" />
-                                <div className="flex items-center gap-4 mb-8">
-                                    <div className="w-10 h-10 bg-red-500/5 border border-red-500/20 flex items-center justify-center">
-                                        <AlertTriangle size={18} className="text-red-500" />
+                        <div className="space-y-8">
+                            <section className="rounded-3xl bg-slate-900/80 border border-slate-800 p-8 shadow-2xl backdrop-blur-xl">
+                                <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-800">
+                                    <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+                                        <AlertTriangle size={20} />
                                     </div>
-                                    <h2 className="text-xl font-light tracking-tight text-accent">Operational <span className="text-red-500">State</span></h2>
+                                    <h2 className="text-lg font-bold text-white">System Controls</h2>
                                 </div>
 
-                                <div className="space-y-6 sm:space-y-8">
-                                    <div className="flex items-center justify-between gap-4 sm:gap-6 p-4 sm:p-6 border border-gold/5 bg-gold/[0.02]">
+                                <div className="space-y-6">
+                                    <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-950/60 border border-slate-800">
                                         <div>
-                                            <p className="text-[10px] font-bold uppercase tracking-widest text-accent mb-1">Maintenance Mode</p>
-                                            <p className="text-[9px] text-accent/30 leading-relaxed uppercase tracking-tighter">Suspends user access for upgrades.</p>
+                                            <p className="text-sm font-semibold text-white">Maintenance Mode</p>
+                                            <p className="text-xs text-slate-400">Suspends public access while system maintenance is in progress.</p>
                                         </div>
                                         <button
                                             onClick={() => setSettings({ ...settings, isMaintenanceMode: !settings.isMaintenanceMode })}
-                                            className={`relative w-12 sm:w-14 h-6 sm:h-7 transition-all duration-500 rounded-full border flex-shrink-0 ${settings.isMaintenanceMode ? 'bg-red-600 border-red-500' : 'bg-primary border-gold/20'}`}
+                                            className={`relative w-12 h-6 transition-colors rounded-full border ${
+                                                settings?.isMaintenanceMode ? 'bg-amber-600 border-amber-500' : 'bg-slate-800 border-slate-700'
+                                            }`}
                                         >
-                                            <div className={`absolute top-0.5 sm:top-1 w-4 h-4 rounded-full transition-all duration-500 ${settings.isMaintenanceMode ? 'left-7 sm:left-8 bg-white' : 'left-0.5 sm:left-1 bg-gold'}`} />
+                                            <div className={`absolute top-0.5 w-5 h-5 rounded-full transition-transform ${
+                                                settings?.isMaintenanceMode ? 'translate-x-6 bg-white' : 'translate-x-0.5 bg-slate-400'
+                                            }`} />
                                         </button>
                                     </div>
 
-                                    <div className="flex items-center justify-between gap-4 sm:gap-6 p-4 sm:p-6 border border-gold/5 bg-gold/[0.02]">
+                                    <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-950/60 border border-slate-800">
                                         <div>
-                                            <p className="text-[10px] font-bold uppercase tracking-widest text-accent mb-1">User Registration</p>
-                                            <p className="text-[9px] text-accent/30 leading-relaxed uppercase tracking-tighter">Enable new account registrations.</p>
+                                            <p className="text-sm font-semibold text-white">User Registration</p>
+                                            <p className="text-xs text-slate-400">Allow new clients to register accounts.</p>
                                         </div>
                                         <button
                                             onClick={() => setSettings({ ...settings, isRegistrationEnabled: !settings.isRegistrationEnabled })}
-                                            className={`relative w-12 sm:w-14 h-6 sm:h-7 transition-all duration-500 rounded-full border flex-shrink-0 ${settings.isRegistrationEnabled ? 'bg-green-600 border-green-500' : 'bg-primary border-gold/20'}`}
+                                            className={`relative w-12 h-6 transition-colors rounded-full border ${
+                                                settings?.isRegistrationEnabled ? 'bg-emerald-600 border-emerald-500' : 'bg-slate-800 border-slate-700'
+                                            }`}
                                         >
-                                            <div className={`absolute top-0.5 sm:top-1 w-4 h-4 rounded-full transition-all duration-500 ${settings.isRegistrationEnabled ? 'left-7 sm:left-8 bg-white' : 'left-0.5 sm:left-1 bg-gold'}`} />
+                                            <div className={`absolute top-0.5 w-5 h-5 rounded-full transition-transform ${
+                                                settings?.isRegistrationEnabled ? 'translate-x-6 bg-white' : 'translate-x-0.5 bg-slate-400'
+                                            }`} />
                                         </button>
                                     </div>
 
-                                    <div className="space-y-3">
-                                        <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent/50">Maintenance Broadcast</label>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-semibold text-slate-300">Maintenance Broadcast Message</label>
                                         <textarea
-                                            value={settings.maintenanceMessage}
+                                            value={settings?.maintenanceMessage || ''}
                                             onChange={(e) => setSettings({ ...settings, maintenanceMessage: e.target.value })}
-                                            className="w-full bg-primary border border-gold/10 p-4 sm:p-5 text-accent text-sm font-light focus:outline-none focus:border-red-500 focus:bg-red-500/[0.02] transition-all min-h-[100px] sm:min-h-[120px]"
-                                            placeholder="Broadcast message..."
+                                            className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-400 rounded-xl p-3.5 text-xs text-white outline-none transition-all resize-none min-h-[90px]"
+                                            placeholder="System is undergoing scheduled maintenance..."
                                         />
                                     </div>
                                 </div>
                             </section>
 
-                            <section className="bg-primary-light/10 border border-gold/10 p-6 sm:p-10 relative overflow-hidden group">
-                                <div className="absolute top-0 left-0 w-8 h-[1px] bg-gold" />
-                                <div className="flex items-center gap-4 mb-8">
-                                    <div className="w-10 h-10 bg-gold/5 border border-gold/20 flex items-center justify-center">
-                                        <ShieldCheck size={18} className="text-gold" />
+                            <section className="rounded-3xl bg-slate-900/80 border border-slate-800 p-8 shadow-2xl backdrop-blur-xl">
+                                <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-800">
+                                    <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+                                        <ShieldCheck size={20} />
                                     </div>
-                                    <h2 className="text-xl font-light tracking-tight text-accent">Bank <span className="text-gold">Branding</span></h2>
+                                    <h2 className="text-lg font-bold text-white">Logo & Display Text</h2>
                                 </div>
 
-                                <div className="space-y-6">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                                        <div className="space-y-2">
-                                            <label className="text-[9px] font-bold uppercase tracking-widest text-accent/30">Logo Base Text</label>
+                                <div className="space-y-5">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-semibold text-slate-300">Logo Primary Text</label>
                                             <input
                                                 type="text"
-                                                value={settings.logoText}
+                                                value={settings?.logoText || 'KeyTrust'}
                                                 onChange={(e) => setSettings({ ...settings, logoText: e.target.value })}
-                                                className="w-full bg-primary border border-gold/10 p-3 sm:p-4 text-accent text-xs font-light focus:outline-none focus:border-gold/40 transition-all"
-                                                placeholder="e.g. optima"
+                                                className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-400 rounded-xl px-4 py-2.5 text-white text-xs outline-none"
+                                                placeholder="KeyTrust"
                                             />
                                         </div>
-                                        <div className="space-y-2">
-                                            <label className="text-[9px] font-bold uppercase tracking-widest text-accent/30">Logo Accent</label>
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-semibold text-slate-300">Logo Accent Text</label>
                                             <input
                                                 type="text"
-                                                value={settings.logoAccent}
+                                                value={settings?.logoAccent || 'Pay'}
                                                 onChange={(e) => setSettings({ ...settings, logoAccent: e.target.value })}
-                                                className="w-full bg-primary border border-gold/10 p-3 sm:p-4 text-accent text-xs font-light focus:outline-none focus:border-gold/40 transition-all"
-                                                placeholder="e.g. nexgen"
+                                                className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-400 rounded-xl px-4 py-2.5 text-white text-xs outline-none"
+                                                placeholder="Pay"
                                             />
                                         </div>
                                     </div>
 
-                                    <div className="space-y-4">
-                                        <label className="text-[9px] font-bold uppercase tracking-widest text-accent/30">Iconic Logo Asset</label>
-                                        <div className="flex items-start gap-4 sm:gap-6">
-                                            {settings.logoUrl && (
-                                                <div className="w-16 h-16 sm:w-20 sm:h-20 border border-gold/20 bg-primary-light flex items-center justify-center p-2 flex-shrink-0">
-                                                    <img src={settings.logoUrl} alt="Bank Logo" className="max-w-full max-h-full object-contain" />
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-semibold text-slate-300">Custom Brand Logo File</label>
+                                        <div className="flex items-center gap-4">
+                                            {settings?.logoUrl ? (
+                                                <div className="w-14 h-14 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center p-2">
+                                                    <img src={settings.logoUrl} alt="Logo" className="max-w-full max-h-full object-contain" />
+                                                </div>
+                                            ) : (
+                                                <div className="w-14 h-14 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 font-bold text-lg">
+                                                    K
                                                 </div>
                                             )}
-                                            <div className="flex-1">
-                                                <label className="group flex flex-col items-center justify-center w-full h-16 sm:h-20 border border-dashed border-gold/20 hover:border-gold/40 transition-all cursor-pointer bg-primary/30">
-                                                    <div className="flex flex-col items-center justify-center pt-2 sm:pt-5 pb-2 sm:pb-6">
-                                                        <Save size={12} className="text-gold/40 group-hover:text-gold transition-colors mb-1 sm:mb-2" />
-                                                        <p className="text-[7px] sm:text-[8px] text-accent/40 uppercase tracking-widest">{uploading ? 'Uploading...' : 'Upload Site Logo'}</p>
-                                                    </div>
-                                                    <input type="file" className="hidden" onChange={handleLogoUpload} disabled={uploading} accept="image/*" />
-                                                </label>
-                                                <p className="text-[7px] sm:text-[8px] text-accent/20 uppercase tracking-tighter mt-1 sm:mt-2">Formats: SVG, PNG, ICO, JPG.</p>
-                                            </div>
+                                            <label className="cursor-pointer px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-cyan-400 text-xs font-semibold text-slate-300 hover:text-white transition-all">
+                                                <span>{uploading ? 'Uploading...' : 'Upload New Logo'}</span>
+                                                <input type="file" className="hidden" onChange={handleLogoUpload} disabled={uploading} accept="image/*" />
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
                             </section>
                         </div>
 
-                        {/* Institutional Identity */}
-                        <div className="space-y-10">
-                            <section className="bg-primary-light/10 border border-gold/10 p-8 md:p-10 relative overflow-hidden group h-full">
-                                <div className="absolute top-0 right-0 w-8 h-[1px] bg-gold" />
-                                <div className="flex items-center gap-4 mb-8">
-                                    <div className="w-20 h-20 border border-gold/40 flex items-center justify-center rounded-sm bg-gold/5">
-                                        <span className="text-gold font-serif text-3xl">C</span>
+                        {/* Brand & Socials */}
+                        <div className="space-y-8">
+                            <section className="rounded-3xl bg-slate-900/80 border border-slate-800 p-8 shadow-2xl backdrop-blur-xl h-full">
+                                <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-800">
+                                    <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+                                        <Building size={20} />
                                     </div>
-                                    <h2 className="text-xl font-light tracking-tight text-accent">Bank <span className="text-gold">Identity</span></h2>
+                                    <h2 className="text-lg font-bold text-white">Brand Identity & Support</h2>
                                 </div>
 
-                                <div className="space-y-8">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                        <div className="space-y-3">
-                                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent/50 flex items-center gap-2">
-                                                <ShieldCheck size={12} /> Bank Name
-                                            </label>
-                                            <input
-                                                type="text"
-                                                value={settings.companyName}
-                                                onChange={(e) => setSettings({ ...settings, companyName: e.target.value })}
-                                                className="w-full bg-primary border border-gold/10 p-4 text-accent text-sm font-light focus:outline-none focus:border-gold/40 transition-all"
-                                            />
-                                        </div>
-                                        <div className="space-y-3">
-                                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent/50 flex items-center gap-2">
-                                                <Mail size={12} /> Support Email
-                                            </label>
-                                            <input
-                                                type="email"
-                                                value={settings.supportEmail}
-                                                onChange={(e) => setSettings({ ...settings, supportEmail: e.target.value })}
-                                                className="w-full bg-primary border border-gold/10 p-4 text-accent text-sm font-light focus:outline-none focus:border-gold/40 transition-all"
-                                            />
-                                        </div>
+                                <div className="space-y-6">
+                                    <div className="space-y-1.5">
+                                        <label className="text-xs font-semibold text-slate-300">Company Name</label>
+                                        <input
+                                            type="text"
+                                            value={settings?.companyName || 'KeyTrust Pay'}
+                                            onChange={(e) => setSettings({ ...settings, companyName: e.target.value })}
+                                            className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-400 rounded-xl px-4 py-3 text-white text-sm outline-none"
+                                        />
                                     </div>
 
-                                    <div className="space-y-6 pt-6 border-t border-gold/5">
-                                        <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-gold/40 flex items-center gap-3">
-                                            <Share2 size={12} /> Social Media Links
+                                    <div className="space-y-1.5">
+                                        <label className="text-xs font-semibold text-slate-300">Support Desk Email</label>
+                                        <input
+                                            type="email"
+                                            value={settings?.supportEmail || 'support@keytrustpay.org'}
+                                            onChange={(e) => setSettings({ ...settings, supportEmail: e.target.value })}
+                                            className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-400 rounded-xl px-4 py-3 text-white text-sm outline-none"
+                                        />
+                                    </div>
+
+                                    <div className="pt-4 border-t border-slate-800 space-y-4">
+                                        <p className="text-xs font-semibold text-cyan-400 uppercase tracking-wider flex items-center gap-2">
+                                            <Share2 size={14} /> Social Channels
                                         </p>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            {Object.keys(settings.socialLinks).map((platform) => (
-                                                <div key={platform} className="space-y-2">
-                                                    <label className="text-[9px] font-bold uppercase tracking-widest text-accent/30 capitalize">{platform}</label>
+                                        <div className="space-y-3">
+                                            {settings?.socialLinks && Object.keys(settings.socialLinks).map((platform) => (
+                                                <div key={platform} className="space-y-1">
+                                                    <label className="text-xs text-slate-400 capitalize">{platform}</label>
                                                     <input
                                                         type="text"
-                                                        value={settings.socialLinks[platform]}
+                                                        value={settings.socialLinks[platform] || ''}
                                                         onChange={(e) => setSettings({
                                                             ...settings,
                                                             socialLinks: { ...settings.socialLinks, [platform]: e.target.value }
                                                         })}
-                                                        className="w-full bg-primary border border-gold/5 p-3 text-accent text-xs font-light focus:outline-none focus:border-gold/20 transition-all"
-                                                        placeholder={`https://${platform}.com/optimanexgen`}
+                                                        className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-400 rounded-xl px-4 py-2 text-white text-xs outline-none"
+                                                        placeholder={`https://${platform}.com/keytrustpay`}
                                                     />
                                                 </div>
                                             ))}
                                         </div>
-                                    </div>
-
-                                    <div className="mt-10 p-6 bg-red-500/5 border border-red-500/10 flex items-start gap-4">
-                                        <Info size={16} className="text-red-500 mt-1" />
-                                        <p className="text-[9px] text-accent/50 uppercase leading-relaxed tracking-widest font-bold">
-                                            Warning: Changes will be applied globally across the entire system.
-                                        </p>
                                     </div>
                                 </div>
                             </section>
@@ -290,7 +285,6 @@ export default function GovernancePage() {
                     </div>
                 </div>
             </div>
-
         </div>
     )
 }

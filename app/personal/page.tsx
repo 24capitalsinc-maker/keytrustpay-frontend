@@ -2,90 +2,130 @@
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { User, Shield, Zap, Smartphone, ArrowRight, ShieldCheck, CheckCircle2, TrendingUp, PiggyBank, CreditCard, Clock } from 'lucide-react'
+import { Shield, Zap, ArrowRight, ShieldCheck, CheckCircle2, TrendingUp, PiggyBank, CreditCard, Clock, Sparkles } from 'lucide-react'
 import Footer from '@/components/Footer'
 
 export default function PersonalPage() {
     const fadeIn = {
-        initial: { opacity: 0, y: 30 },
+        initial: { opacity: 0, y: 25 },
         whileInView: { opacity: 1, y: 0 },
         viewport: { once: true as const },
-        transition: { duration: 0.8, ease: "easeOut" as const }
+        transition: { duration: 0.6, ease: "easeOut" as const }
     }
 
     return (
-        <main className="min-h-screen bg-primary flex flex-col font-sans relative overflow-x-hidden">
+        <main className="min-h-screen bg-[#090D16] text-white flex flex-col font-sans relative overflow-x-hidden">
+            {/* Ambient gradients */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-b from-sky-500/15 via-cyan-500/5 to-transparent blur-3xl pointer-events-none" />
+            
             <Navbar />
 
             {/* Hero */}
-            <section className="relative min-h-[90vh] flex items-center justify-center pt-32 pb-20 px-4 md:px-12">
-                <div className="absolute inset-0 z-0 opacity-20 mix-blend-overlay pointer-events-none"
-                    style={{ backgroundImage: "url('https://static.wixstatic.com/media/c837a6_51db7f706561479b9f9f7570f739e702~mv2.png')", backgroundSize: 'cover', backgroundPosition: 'center' }} />
-                <div className="absolute inset-0 z-0 bg-gradient-to-t from-primary via-primary/95 to-primary/60 pointer-events-none" />
-
-                <div className="max-w-6xl w-full mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                    <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, ease: "easeOut" as const }}>
-                        <div className="inline-flex items-center gap-3 mb-8 border-l-2 border-gold pl-4">
-                            <span className="text-xs font-bold uppercase tracking-[0.3em] text-gold">Private Wealth</span>
+            <section className="relative min-h-[85vh] flex items-center justify-center pt-32 pb-20 px-4 sm:px-6 lg:px-12">
+                <div className="max-w-7xl w-full mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <motion.div 
+                        initial={{ opacity: 0, x: -30 }} 
+                        animate={{ opacity: 1, x: 0 }} 
+                        transition={{ duration: 0.8, ease: "easeOut" as const }}
+                    >
+                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium mb-8">
+                            <Sparkles size={14} />
+                            <span>Personal Banking Redefined</span>
                         </div>
-                        <h1 className="text-5xl md:text-7xl font-light text-accent tracking-tighter mb-8 leading-[1.1]">
-                            Banking tailored to <br /><span className="font-medium text-gold">Your Ambition.</span>
+                        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6 leading-[1.1]">
+                            Banking tailored to <br />
+                            <span className="bg-gradient-to-r from-sky-400 via-cyan-300 to-emerald-400 bg-clip-text text-transparent">
+                                your daily life.
+                            </span>
                         </h1>
-                        <p className="text-lg text-accent/60 mb-10 leading-relaxed font-light">
-                            Zero fees. Interest on your checking. Early direct deposits. Instant peer transfers. This is what modern personal banking should feel like.
+                        <p className="text-lg text-slate-300 mb-10 leading-relaxed font-normal max-w-xl">
+                            Zero monthly maintenance fees. Earn 5.24% APY on your savings. Receive direct deposits up to 2 days early, and send money to anyone in seconds with zero hidden charges.
                         </p>
-                        <div className="flex flex-col sm:flex-row gap-5">
-                            <Link href="/verify" className="bg-gold text-primary px-10 py-5 font-medium text-sm tracking-widest uppercase hover:bg-gold-dark transition-colors inline-flex items-center justify-center">Create an Account</Link>
-                            <Link href="/login" className="px-10 py-5 text-sm tracking-widest uppercase text-accent border border-gold hover:bg-gold/5 transition-colors inline-flex items-center justify-center gap-3">
-                                <ShieldCheck size={16} className="text-gold" /> Sign In
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <Link 
+                                href="/register" 
+                                className="bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-400 hover:to-sky-400 text-slate-950 font-semibold px-8 py-4 rounded-xl shadow-lg shadow-cyan-500/20 transition-all flex items-center justify-center gap-2 group"
+                            >
+                                Open Free Account
+                                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                            <Link 
+                                href="/login" 
+                                className="px-8 py-4 rounded-xl font-medium text-slate-200 border border-slate-700 hover:border-slate-500 hover:bg-slate-800/40 transition-all flex items-center justify-center gap-2"
+                            >
+                                <ShieldCheck size={18} className="text-cyan-400" /> 
+                                Client Login
                             </Link>
                         </div>
-                        <div className="mt-10 flex gap-8">
-                            {[{ v: "$0", l: "Monthly Fees" }, { v: "5.24%", l: "Savings APY" }, { v: "2 Days", l: "Early Paycheck" }].map((b, i) => (
-                                <div key={i}>
-                                    <p className="text-gold text-2xl font-light">{b.v}</p>
-                                    <p className="text-accent/40 text-[10px] uppercase tracking-widest">{b.l}</p>
-                                </div>
-                            ))}
+                        <div className="mt-12 grid grid-cols-3 gap-6 pt-8 border-t border-slate-800">
+                            <div>
+                                <p className="text-2xl sm:text-3xl font-bold text-white">$0</p>
+                                <p className="text-slate-400 text-xs mt-1">Monthly Fees</p>
+                            </div>
+                            <div>
+                                <p className="text-2xl sm:text-3xl font-bold text-cyan-400">5.24%</p>
+                                <p className="text-slate-400 text-xs mt-1">Savings APY</p>
+                            </div>
+                            <div>
+                                <p className="text-2xl sm:text-3xl font-bold text-emerald-400">2 Days</p>
+                                <p className="text-slate-400 text-xs mt-1">Early Paycheck</p>
+                            </div>
                         </div>
                     </motion.div>
 
-                    <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" as const }} className="hidden lg:block">
-                        <div className="bg-primary-light border border-gold/20 p-10 flex flex-col gap-6">
-                            <div className="flex justify-between items-center border-b border-gold/10 pb-6">
+                    {/* Interactive Live Card Mock */}
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.95 }} 
+                        animate={{ opacity: 1, scale: 1 }} 
+                        transition={{ duration: 0.9, delay: 0.2, ease: "easeOut" as const }} 
+                        className="hidden lg:block"
+                    >
+                        <div className="relative rounded-3xl bg-slate-900/80 border border-slate-800 p-8 shadow-2xl backdrop-blur-xl">
+                            <div className="flex justify-between items-center pb-6 border-b border-slate-800">
                                 <div>
-                                    <p className="text-[10px] text-gold uppercase tracking-[0.3em] mb-1">Checking</p>
-                                    <p className="text-accent/40 text-xs font-mono">**** 2941</p>
+                                    <p className="text-xs font-semibold uppercase tracking-wider text-cyan-400">Personal Checking</p>
+                                    <p className="text-slate-400 text-xs font-mono mt-0.5">Acct •••• 4912</p>
                                 </div>
-                                <TrendingUp size={18} className="text-green-400" />
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live & Protected
+                                </span>
                             </div>
-                            <div>
-                                <p className="text-xs text-accent/40 uppercase tracking-widest mb-2">Available Balance</p>
-                                <p className="text-4xl font-light text-accent tracking-tight">$14,290.50</p>
-                                <p className="text-green-400 text-xs mt-2 font-mono">+ $1,200.00 INBOUND</p>
-                            </div>
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="bg-primary border border-gold/10 p-4">
-                                    <p className="text-[10px] text-accent/40 uppercase tracking-widest mb-1">Vault APY</p>
-                                    <p className="text-xl font-mono text-gold">5.24%</p>
-                                </div>
-                                <div className="bg-primary border border-gold/10 p-4">
-                                    <p className="text-[10px] text-accent/40 uppercase tracking-widest mb-1">Cashback</p>
-                                    <p className="text-xl font-mono text-accent">$84.20</p>
+                            
+                            <div className="my-6">
+                                <p className="text-xs text-slate-400 mb-1">Available Balance</p>
+                                <p className="text-4xl font-bold text-white tracking-tight">$18,450.25</p>
+                                <div className="flex items-center gap-1.5 text-emerald-400 text-xs mt-2 font-medium">
+                                    <TrendingUp size={14} />
+                                    <span>+ $3,200.00 inbound direct deposit received</span>
                                 </div>
                             </div>
-                            <div className="space-y-2">
+
+                            <div className="grid grid-cols-2 gap-4 mb-6">
+                                <div className="bg-slate-800/60 rounded-2xl p-4 border border-slate-700/60">
+                                    <p className="text-xs text-slate-400 mb-1">Growth Vault APY</p>
+                                    <p className="text-xl font-bold text-cyan-400">5.24%</p>
+                                </div>
+                                <div className="bg-slate-800/60 rounded-2xl p-4 border border-slate-700/60">
+                                    <p className="text-xs text-slate-400 mb-1">Card Cash Back</p>
+                                    <p className="text-xl font-bold text-emerald-400">+$124.60</p>
+                                </div>
+                            </div>
+
+                            <div className="space-y-3">
+                                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Recent Activity</p>
                                 {[
-                                    { name: "Salary Direct Deposit", amount: "+$5,500.00", time: "Yesterday", type: "in" },
-                                    { name: "Whole Foods Market", amount: "-$84.20", time: "Today", type: "out" },
-                                    { name: "Vault Transfer", amount: "-$500.00", time: "Today", type: "out" },
+                                    { name: "Salary Direct Deposit", amount: "+$3,200.00", time: "Yesterday, 9:15 AM", type: "in" },
+                                    { name: "Grocery Store", amount: "-$64.80", time: "Today, 1:42 PM", type: "out" },
+                                    { name: "Savings Vault Transfer", amount: "-$500.00", time: "Today, 3:10 PM", type: "out" },
                                 ].map((tx, i) => (
-                                    <div key={i} className="flex justify-between items-center p-3 hover:bg-primary/50 transition-colors">
+                                    <div key={i} className="flex justify-between items-center p-3 rounded-xl bg-slate-950/40 border border-slate-800/80">
                                         <div>
-                                            <p className="text-accent text-sm">{tx.name}</p>
-                                            <p className="text-accent/30 text-xs">{tx.time}</p>
+                                            <p className="text-slate-200 text-sm font-medium">{tx.name}</p>
+                                            <p className="text-slate-500 text-xs">{tx.time}</p>
                                         </div>
-                                        <span className={`font-mono text-sm ${tx.type === 'in' ? 'text-green-400' : 'text-accent/70'}`}>{tx.amount}</span>
+                                        <span className={`font-mono text-sm font-semibold ${tx.type === 'in' ? 'text-emerald-400' : 'text-slate-300'}`}>
+                                            {tx.amount}
+                                        </span>
                                     </div>
                                 ))}
                             </div>
@@ -95,53 +135,63 @@ export default function PersonalPage() {
             </section>
 
             {/* Products */}
-            <section className="py-24 px-4 md:px-12 bg-primary-light border-y border-gold/10">
+            <section className="py-24 px-4 sm:px-6 lg:px-12 bg-slate-900/40 border-y border-slate-800/80 relative">
                 <div className="max-w-7xl mx-auto">
                     <motion.div {...fadeIn} className="text-center mb-16">
-                        <p className="text-gold font-mono text-[10px] tracking-[0.3em] uppercase mb-4">Products</p>
-                        <h2 className="text-4xl font-light text-accent tracking-tighter">Everything you need, <span className="text-gold font-medium">nothing you don't.</span></h2>
+                        <p className="text-cyan-400 font-semibold text-xs tracking-wider uppercase mb-3">KeyTrust Pay Products</p>
+                        <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-white">
+                            Everything you need, <span className="text-cyan-400">built with zero hassle.</span>
+                        </h2>
                     </motion.div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {[
-                            { icon: <PiggyBank size={28} />, title: "Savings Vault", value: "5.24% APY", desc: "Earn the highest yield on the market with no lockup period and daily interest accrual." },
-                            { icon: <CreditCard size={28} />, title: "Debit Card", value: "Zero Fees", desc: "Free metal debit card with worldwide ATM access, zero foreign transaction fees, and real-time spend notifications." },
-                            { icon: <Zap size={28} />, title: "Instant Transfers", value: "Under 60s", desc: "Transfer funds to any optimanexgen member instantly using just their email or phone number." },
-                            { icon: <Clock size={28} />, title: "Early Paycheck", value: "2 Days Early", desc: "Get your direct deposit up to 48 hours earlier than traditional banks through our instant routing system." },
+                            { icon: <PiggyBank size={26} />, title: "High-Yield Vault", value: "5.24% APY", desc: "Grow your savings faster with daily interest accrual, zero lockup periods, and instant withdrawals." },
+                            { icon: <CreditCard size={26} />, title: "KeyTrust Debit", value: "Zero Fees", desc: "Virtual and physical debit card with global ATM access, zero foreign exchange fees, and instant spend alerts." },
+                            { icon: <Zap size={26} />, title: "Instant Transfers", value: "Under 60s", desc: "Send money to friends, family, or domestic and international accounts in seconds with transparent rates." },
+                            { icon: <Clock size={26} />, title: "Early Paycheck", value: "2 Days Early", desc: "Receive your employer direct deposit up to 48 hours earlier thanks to our optimized clearing routes." },
                         ].map((p, i) => (
-                            <motion.div key={i} whileHover={{ y: -4 }} {...fadeIn} className="bg-primary border border-gold/10 hover:border-gold/30 p-8 group transition-all">
-                                <div className="w-14 h-14 border border-gold/20 flex items-center justify-center text-gold mb-6 group-hover:bg-gold group-hover:text-primary transition-all">{p.icon}</div>
-                                <div className="text-gold font-mono text-lg mb-1">{p.value}</div>
-                                <h3 className="text-xl font-medium text-accent mb-3 group-hover:text-gold transition-colors">{p.title}</h3>
-                                <p className="text-accent/50 text-sm leading-relaxed">{p.desc}</p>
+                            <motion.div 
+                                key={i} 
+                                whileHover={{ y: -6 }} 
+                                {...fadeIn} 
+                                className="bg-slate-900/60 border border-slate-800 hover:border-cyan-500/40 p-8 rounded-2xl group transition-all duration-300"
+                            >
+                                <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition-transform">
+                                    {p.icon}
+                                </div>
+                                <div className="text-cyan-400 font-mono text-sm font-semibold mb-1">{p.value}</div>
+                                <h3 className="text-xl font-semibold text-white mb-3 group-hover:text-cyan-300 transition-colors">{p.title}</h3>
+                                <p className="text-slate-400 text-sm leading-relaxed">{p.desc}</p>
                             </motion.div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Why optimanexgen */}
-            <section className="py-24 px-4 md:px-12 bg-primary border-b border-gold/10">
+            {/* Why KeyTrust Pay */}
+            <section className="py-24 px-4 sm:px-6 lg:px-12 relative">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                     <motion.div {...fadeIn}>
-                        <p className="text-gold font-mono text-[10px] tracking-[0.3em] uppercase mb-6">Why optimanexgen</p>
-                        <h2 className="text-3xl md:text-4xl font-light text-accent tracking-tighter mb-8 leading-tight">
-                            A completely <span className="text-gold font-medium">frictionless</span> financial ecosystem.
+                        <p className="text-cyan-400 font-semibold text-xs tracking-wider uppercase mb-4">Why KeyTrust Pay</p>
+                        <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-white mb-6 leading-tight">
+                            A seamless, modern <br />
+                            <span className="text-cyan-400">financial companion.</span>
                         </h2>
-                        <p className="text-accent/50 font-light mb-10 leading-relaxed">
-                            Traditional banks rely on confusing fee structures and manual processes to generate profit. optimanexgen is built differently — every product we offer is designed to save you money, not cost you money.
+                        <p className="text-slate-300 font-normal mb-8 leading-relaxed">
+                            Traditional retail banks rely on overdraft fees, monthly account charges, and hidden conversion markups. KeyTrust Pay is designed transparently: fair rates, real security, and tools that help you save money every day.
                         </p>
-                        <ul className="space-y-5">
+                        <ul className="space-y-4">
                             {[
-                                { title: "No Minimums or Monthly Fees", desc: "Keep 100% of what is yours. No fee ever." },
-                                { title: "Get Paid 2 Days Early", desc: "Lightning network routing credits faster." },
-                                { title: "FDIC Insured to $250,000", desc: "Your deposits are fully protected." },
-                                { title: "24/7 Live Human Support", desc: "Not bots. Real people, around the clock." },
+                                { title: "No Minimums or Monthly Fees", desc: "Keep 100% of your earnings. No hidden charges or unexpected penalties." },
+                                { title: "FDIC Insured Protection", desc: "Your deposits are held securely with our partner banks and insured up to $250,000." },
+                                { title: "Instant Card Controls", desc: "Freeze your card with one tap, generate virtual card numbers, and set spending limits." },
+                                { title: "24/7 Human Support", desc: "Friendly customer support team ready to assist you day and night." },
                             ].map((item, i) => (
-                                <li key={i} className="flex items-start gap-4">
-                                    <CheckCircle2 size={20} className="text-gold shrink-0 mt-1" strokeWidth={1.5} />
+                                <li key={i} className="flex items-start gap-4 p-4 rounded-xl bg-slate-900/40 border border-slate-800/60">
+                                    <CheckCircle2 size={20} className="text-emerald-400 shrink-0 mt-0.5" />
                                     <div>
-                                        <h4 className="text-accent font-medium text-sm mb-1">{item.title}</h4>
-                                        <p className="text-accent/40 text-xs font-light">{item.desc}</p>
+                                        <h4 className="text-white font-semibold text-sm mb-0.5">{item.title}</h4>
+                                        <p className="text-slate-400 text-xs">{item.desc}</p>
                                     </div>
                                 </li>
                             ))}
@@ -149,27 +199,30 @@ export default function PersonalPage() {
                     </motion.div>
 
                     <motion.div {...fadeIn}>
-                        <div className="bg-primary-light border border-gold/20 p-10">
-                            <h3 className="text-accent font-light text-lg mb-8 pb-4 border-b border-gold/10">optimanexgen vs. Traditional Bank</h3>
+                        <div className="rounded-3xl bg-slate-900/90 border border-slate-800 p-8 sm:p-10 shadow-2xl backdrop-blur-xl">
+                            <h3 className="text-white font-semibold text-xl mb-6 pb-4 border-b border-slate-800 flex justify-between items-center">
+                                <span>KeyTrust Pay vs Traditional Banks</span>
+                                <span className="text-xs font-mono text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded-full border border-cyan-500/20">Comparison</span>
+                            </h3>
                             <div className="space-y-4">
                                 {[
-                                    { feature: "Monthly maintenance fee", us: "Free", them: "$12-25/mo" },
-                                    { feature: "Minimum balance requirement", us: "$0", them: "$500-1,500" },
-                                    { feature: "Foreign transaction fees", us: "0%", them: "3%" },
-                                    { feature: "ATM fees worldwide", us: "Free", them: "$2.50-5.00" },
-                                    { feature: "Early direct deposit", us: "2 days early", them: "On payday" },
-                                    { feature: "Savings interest (APY)", us: "5.24%", them: "0.01-0.05%" },
+                                    { feature: "Monthly Maintenance Fee", us: "$0 Free", them: "$12 - $25/mo" },
+                                    { feature: "Minimum Balance Requirement", us: "$0.00", them: "$500 - $1,500" },
+                                    { feature: "Foreign Transaction Fee", us: "0%", them: "3.0%" },
+                                    { feature: "Global ATM Withdrawals", us: "Free in-network", them: "$2.50 - $5.00" },
+                                    { feature: "Early Direct Deposit", us: "Up to 2 days early", them: "On payday" },
+                                    { feature: "Savings Yield (APY)", us: "5.24% APY", them: "0.01% - 0.05%" },
                                 ].map((row, i) => (
-                                    <div key={i} className="grid grid-cols-3 gap-4 py-3 border-b border-gold/5 text-sm">
-                                        <span className="text-accent/50 col-span-1 text-xs">{row.feature}</span>
-                                        <span className="text-gold font-mono text-center font-bold">{row.us}</span>
-                                        <span className="text-accent/30 font-mono text-right">{row.them}</span>
+                                    <div key={i} className="grid grid-cols-3 gap-4 py-3.5 border-b border-slate-800/80 text-sm items-center">
+                                        <span className="text-slate-400 text-xs font-medium">{row.feature}</span>
+                                        <span className="text-cyan-400 font-semibold text-center">{row.us}</span>
+                                        <span className="text-slate-500 text-right text-xs">{row.them}</span>
                                     </div>
                                 ))}
-                                <div className="pt-2 grid grid-cols-3 gap-4 text-[10px] uppercase tracking-widest text-accent/30">
-                                    <span></span>
-                                    <span className="text-gold text-center">optimanexgen</span>
-                                    <span className="text-right">Traditional Bank</span>
+                                <div className="pt-2 grid grid-cols-3 gap-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                                    <span>Feature</span>
+                                    <span className="text-cyan-400 text-center">KeyTrust Pay</span>
+                                    <span className="text-right">Legacy Bank</span>
                                 </div>
                             </div>
                         </div>
@@ -177,13 +230,20 @@ export default function PersonalPage() {
                 </div>
             </section>
 
-            {/* CTA */}
-            <section className="py-24 px-4 md:px-12 bg-gold text-center">
+            {/* Bottom CTA */}
+            <section className="py-20 px-4 sm:px-6 lg:px-12 bg-gradient-to-b from-slate-900 to-[#090D16] border-t border-slate-800 text-center relative">
                 <motion.div {...fadeIn} className="max-w-3xl mx-auto">
-                    <h2 className="text-4xl font-light text-primary tracking-tighter mb-6">The future of personal <span className="font-bold">banking.</span></h2>
-                    <p className="text-primary/70 mb-10 font-light">Opens in 3 minutes. Zero credit score impact.</p>
-                    <Link href="/verify" className="bg-primary text-gold px-12 py-5 font-bold tracking-[0.2em] uppercase inline-flex items-center gap-4 hover:bg-primary-light transition-colors">
-                        Open Account Today <ArrowRight size={18} />
+                    <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-white mb-6">
+                        Ready to experience the future of <span className="text-cyan-400">personal banking?</span>
+                    </h2>
+                    <p className="text-slate-300 mb-10 text-base max-w-xl mx-auto">
+                        Sign up in less than 3 minutes. No credit check required to open an account.
+                    </p>
+                    <Link 
+                        href="/register" 
+                        className="bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-400 hover:to-sky-400 text-slate-950 font-semibold px-10 py-5 rounded-xl shadow-lg shadow-cyan-500/25 inline-flex items-center gap-3 transition-all text-base"
+                    >
+                        Open Your Account Today <ArrowRight size={18} />
                     </Link>
                 </motion.div>
             </section>

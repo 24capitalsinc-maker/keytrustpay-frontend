@@ -44,11 +44,11 @@ export default function VerifyPage() {
     const handleCheckboxClick = useCallback(() => {
         if (phase !== 'checkbox' || checkboxAnimating) return
         setCheckboxAnimating(true)
-        // Short pause to mimic reCAPTCHA "checking" animation
+        // Short pause to mimic check animation
         setTimeout(() => {
             setCheckboxAnimating(false)
             setPhase('challenge')
-        }, 900)
+        }, 800)
     }, [phase, checkboxAnimating])
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -57,12 +57,11 @@ export default function VerifyPage() {
         if (parsed === challenge.answer) {
             setPhase('verified')
             sessionStorage.setItem('captcha_verified', 'true')
-            setTimeout(() => router.push('/register'), 1400)
+            setTimeout(() => router.push('/register'), 1200)
         } else {
             setAttempts(prev => prev + 1)
-            setError('Incorrect. Please try again.')
+            setError('Incorrect answer. Please try again.')
             setAnswer('')
-            // Regenerate after 2 failures
             if (attempts >= 1) {
                 setChallenge(generateChallenge())
                 setAttempts(0)
@@ -78,11 +77,9 @@ export default function VerifyPage() {
     }
 
     return (
-        <main className="min-h-screen bg-primary flex flex-col relative overflow-x-hidden font-sans">
-            {/* Editorial background */}
-            <div className="absolute inset-0 z-0 opacity-15 mix-blend-overlay pointer-events-none"
-                style={{ backgroundImage: "url('https://static.wixstatic.com/media/c837a6_51db7f706561479b9f9f7570f739e702~mv2.png')", backgroundSize: 'cover', backgroundPosition: 'center' }} />
-            <div className="absolute inset-0 z-0 bg-gradient-to-br from-primary via-primary to-primary-light/40 pointer-events-none" />
+        <main className="min-h-screen bg-[#090D16] text-white flex flex-col relative overflow-x-hidden font-sans">
+            {/* Ambient gradients */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-sky-500/15 via-cyan-500/5 to-transparent blur-3xl pointer-events-none" />
 
             <Navbar />
 
@@ -94,163 +91,133 @@ export default function VerifyPage() {
                     className="w-full max-w-md"
                 >
                     {/* Header */}
-                    <div className="text-center mb-10">
-                        <div className="w-16 h-16 bg-primary-light border border-gold/30 mx-auto flex items-center justify-center mb-6">
-                            <Shield size={28} className="text-gold" strokeWidth={1.5} />
+                    <div className="text-center mb-8">
+                        <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 mx-auto flex items-center justify-center mb-4 text-cyan-400">
+                            <Shield size={26} />
                         </div>
-                        <p className="text-gold font-mono text-[10px] tracking-[0.3em] uppercase mb-3">Security Verification</p>
-                        <h1 className="text-3xl font-light text-accent tracking-tight">Confirm you're human.</h1>
-                        <p className="text-accent/40 text-sm mt-3 font-light">Complete the check below to continue to registration.</p>
+                        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">Security Verification</h1>
+                        <p className="text-slate-400 text-sm mt-2">Please complete the check below to proceed to registration.</p>
                     </div>
 
                     {/* CAPTCHA Card */}
-                    <div className="bg-primary-light border border-gold/20 relative overflow-hidden">
-                        {/* Gold top accent */}
-                        <div className="absolute top-0 left-0 w-16 h-[2px] bg-gold" />
-                        <div className="absolute top-0 left-0 w-[2px] h-16 bg-gold" />
-
-                        <div className="p-6 sm:p-8">
-                            {/* Brand strip */}
-                            <div className="flex justify-between items-center mb-6 pb-5 border-b border-gold/10">
-                                <div className="flex items-center gap-2">
-                                    <Lock size={12} className="text-gold" />
-                                    <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">optimanexgen SecureCheck™</span>
-                                </div>
-                                <span className="text-accent/20 text-[10px] uppercase tracking-widest">v3.1</span>
+                    <div className="rounded-3xl bg-slate-900/90 border border-slate-800 p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
+                        {/* Brand strip */}
+                        <div className="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
+                            <div className="flex items-center gap-2">
+                                <Lock size={14} className="text-cyan-400" />
+                                <span className="text-xs text-cyan-400 font-semibold tracking-wide">KeyTrust Pay SecureCheck™</span>
                             </div>
+                            <span className="text-slate-500 text-xs">v4.0</span>
+                        </div>
 
-                            {/* Phase: Checkbox */}
-                            <AnimatePresence mode="wait">
-                                {phase === 'checkbox' && (
-                                    <motion.div key="checkbox"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        className="flex items-center gap-5 py-4"
+                        {/* Phase: Checkbox */}
+                        <AnimatePresence mode="wait">
+                            {phase === 'checkbox' && (
+                                <motion.div key="checkbox"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    className="flex items-center gap-4 py-3"
+                                >
+                                    <button
+                                        onClick={handleCheckboxClick}
+                                        className={`w-7 h-7 rounded-lg border-2 flex items-center justify-center shrink-0 transition-all ${
+                                            checkboxAnimating 
+                                                ? 'border-cyan-400 bg-cyan-400/10' 
+                                                : 'border-slate-600 hover:border-cyan-400 bg-slate-950'
+                                        }`}
+                                        aria-label="Verify you are not a robot"
                                     >
-                                        <button
-                                            onClick={handleCheckboxClick}
-                                            className={`w-8 h-8 border-2 flex items-center justify-center shrink-0 transition-all duration-300 ${checkboxAnimating ? 'border-gold bg-gold/10' : 'border-gold/40 hover:border-gold'}`}
-                                            aria-label="Verify you are not a robot"
-                                        >
-                                            {checkboxAnimating && (
-                                                <motion.div
-                                                    animate={{ rotate: 360 }}
-                                                    transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
-                                                >
-                                                    <RefreshCw size={14} className="text-gold" />
-                                                </motion.div>
+                                        {checkboxAnimating && (
+                                            <div className="w-4 h-4 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+                                        )}
+                                    </button>
+                                    <span className="text-slate-200 text-sm font-medium">I am human and ready to proceed</span>
+                                </motion.div>
+                            )}
+
+                            {/* Phase: Math challenge */}
+                            {phase === 'challenge' && (
+                                <motion.div key="challenge"
+                                    initial={{ opacity: 0, y: 8 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0 }}
+                                >
+                                    <div className="mb-4">
+                                        <p className="text-xs text-slate-400 mb-2">Solve this quick calculation:</p>
+                                        <div className="flex items-center justify-between p-4 rounded-xl bg-slate-950 border border-slate-800">
+                                            <span className="text-xl font-bold font-mono tracking-wider text-cyan-400">
+                                                {challenge.a} {challenge.op} {challenge.b} = ?
+                                            </span>
+                                            <button
+                                                type="button"
+                                                onClick={refreshChallenge}
+                                                className="text-slate-500 hover:text-cyan-400 transition-colors p-1"
+                                                title="New challenge"
+                                            >
+                                                <RefreshCw size={16} />
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <form onSubmit={handleSubmit} className="space-y-4">
+                                        <div>
+                                            <input
+                                                type="number"
+                                                value={answer}
+                                                onChange={e => { setAnswer(e.target.value); setError('') }}
+                                                placeholder="Your answer"
+                                                autoFocus
+                                                className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-400 rounded-xl px-4 py-3 text-white text-base font-mono outline-none transition-colors"
+                                            />
+                                            {error && (
+                                                <p className="text-red-400 text-xs mt-1.5">{error}</p>
                                             )}
-                                        </button>
-                                        <span className="text-accent text-sm font-medium">
-                                            {checkboxAnimating
-                                                ? <span className="text-gold text-xs uppercase tracking-widest">Verifying…</span>
-                                                : "I'm not a robot"}
-                                        </span>
-                                    </motion.div>
-                                )}
-
-                                {/* Phase: Math Challenge */}
-                                {phase === 'challenge' && (
-                                    <motion.div key="challenge"
-                                        initial={{ opacity: 0, y: 8 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0 }}
-                                    >
-                                        <p className="text-accent/50 text-xs uppercase tracking-widest mb-6">Solve the security challenge</p>
-
-                                        {/* Math challenge display */}
-                                        <div className="bg-primary border border-gold/20 p-4 sm:p-8 text-center mb-6">
-                                            <p className="text-accent/40 text-[9px] sm:text-[10px] uppercase tracking-[0.3em] mb-4">What is the answer?</p>
-                                            <div className="flex items-center justify-center gap-3 sm:gap-4">
-                                                <span className="text-3xl sm:text-5xl font-light text-accent font-mono">{challenge.a}</span>
-                                                <span className="text-xl sm:text-3xl text-gold font-light">{challenge.op}</span>
-                                                <span className="text-3xl sm:text-5xl font-light text-accent font-mono">{challenge.b}</span>
-                                                <span className="text-xl sm:text-3xl text-accent/30">=</span>
-                                                <span className="text-2xl sm:text-4xl text-gold font-mono">?</span>
-                                            </div>
                                         </div>
 
-                                        <form onSubmit={handleSubmit} className="space-y-4">
-                                            <div>
-                                                <input
-                                                    type="number"
-                                                    value={answer}
-                                                    onChange={e => { setAnswer(e.target.value); setError('') }}
-                                                    className="w-full bg-primary border border-gold/20 focus:border-gold px-5 py-4 outline-none transition-colors text-accent text-center text-2xl font-mono placeholder:text-accent/20"
-                                                    placeholder="Enter your answer"
-                                                    autoFocus
-                                                />
-                                                {error && (
-                                                    <motion.p
-                                                        initial={{ opacity: 0, y: -4 }}
-                                                        animate={{ opacity: 1, y: 0 }}
-                                                        className="text-red-400 text-xs mt-2 text-center"
-                                                    >
-                                                        {error}
-                                                    </motion.p>
-                                                )}
-                                            </div>
-                                            <div className="flex gap-3">
-                                                <button
-                                                    type="button"
-                                                    onClick={refreshChallenge}
-                                                    className="border border-gold/20 text-accent/50 p-4 hover:border-gold/40 hover:text-gold transition-colors"
-                                                    title="Get a new challenge"
-                                                >
-                                                    <RefreshCw size={16} />
-                                                </button>
-                                                <button
-                                                    type="submit"
-                                                    disabled={!answer}
-                                                    className="flex-1 bg-gold text-primary py-4 font-bold tracking-[0.15em] uppercase text-sm hover:bg-gold-dark transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                                                >
-                                                    Verify <ArrowRight size={16} />
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </motion.div>
-                                )}
-
-                                {/* Phase: Verified */}
-                                {phase === 'verified' && (
-                                    <motion.div key="verified"
-                                        initial={{ opacity: 0, scale: 0.9 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        className="py-6 text-center flex flex-col items-center gap-4"
-                                    >
-                                        <motion.div
-                                            initial={{ scale: 0 }}
-                                            animate={{ scale: 1 }}
-                                            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                                            className="w-16 h-16 bg-green-500/10 border border-green-500/40 rounded-full flex items-center justify-center"
+                                        <button
+                                            type="submit"
+                                            disabled={!answer.trim()}
+                                            className="w-full bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-400 hover:to-sky-400 text-slate-950 font-semibold py-3.5 rounded-xl transition-all shadow-md shadow-cyan-500/20 text-sm flex items-center justify-center gap-2 disabled:opacity-40"
                                         >
-                                            <CheckCircle2 size={32} className="text-green-400" />
-                                        </motion.div>
-                                        <p className="text-green-400 font-bold uppercase tracking-widest text-sm">Verified!</p>
-                                        <p className="text-accent/50 text-xs">Redirecting you to registration…</p>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
+                                            Verify & Continue <ArrowRight size={16} />
+                                        </button>
+                                    </form>
+                                </motion.div>
+                            )}
 
-                            {/* Footer brand */}
-                            <div className="flex justify-between items-center mt-6 pt-5 border-t border-gold/10">
-                                <div className="flex items-center gap-1.5">
-                                    <Shield size={10} className="text-gold/60" />
-                                    <span className="text-[9px] text-accent/30 uppercase tracking-[0.2em]">Protected by optimanexgen</span>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <Link href="/privacy" className="text-[9px] text-accent/20 hover:text-accent/40 uppercase tracking-widest transition-colors">Privacy</Link>
-                                    <Link href="/terms" className="text-[9px] text-accent/20 hover:text-accent/40 uppercase tracking-widest transition-colors">Terms</Link>
-                                </div>
+                            {/* Phase: Verified */}
+                            {phase === 'verified' && (
+                                <motion.div key="verified"
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    className="text-center py-6 space-y-2"
+                                >
+                                    <div className="w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center text-emerald-400 mx-auto mb-3">
+                                        <CheckCircle2 size={30} />
+                                    </div>
+                                    <p className="text-emerald-400 font-bold text-base">Verification Complete!</p>
+                                    <p className="text-slate-400 text-xs">Redirecting to registration…</p>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        {/* Footer brand */}
+                        <div className="flex justify-between items-center mt-6 pt-4 border-t border-slate-800 text-xs text-slate-500">
+                            <div className="flex items-center gap-1.5">
+                                <Shield size={12} className="text-cyan-400" />
+                                <span>Protected by KeyTrust Pay</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <Link href="/privacy" className="hover:text-slate-300 transition-colors">Privacy</Link>
+                                <Link href="/terms" className="hover:text-slate-300 transition-colors">Terms</Link>
                             </div>
                         </div>
                     </div>
 
-                    {/* Back link */}
-                    <p className="text-center mt-6 text-accent/30 text-xs uppercase tracking-widest">
+                    <p className="text-center mt-6 text-slate-400 text-xs">
                         Already have an account?{' '}
-                        <Link href="/login" className="text-gold hover:text-gold-dark transition-colors font-bold">
+                        <Link href="/login" className="text-cyan-400 font-semibold hover:underline">
                             Sign In
                         </Link>
                     </p>

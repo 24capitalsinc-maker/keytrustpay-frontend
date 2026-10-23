@@ -2,141 +2,210 @@
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Briefcase, Globe2, BarChart3, ShieldCheck, ArrowRight, CheckCircle2, Users, Layers, Zap, FileText, Lock, ChevronRight } from 'lucide-react'
+import { Briefcase, Globe2, BarChart3, ShieldCheck, ArrowRight, CheckCircle2, Users, Layers, Zap, CreditCard, Building2 } from 'lucide-react'
 import Footer from '@/components/Footer'
 
 export default function BusinessPage() {
     const fadeIn = {
-        initial: { opacity: 0, y: 30 },
+        initial: { opacity: 0, y: 25 },
         whileInView: { opacity: 1, y: 0 },
         viewport: { once: true as const },
-        transition: { duration: 0.8, ease: "easeOut" as const }
+        transition: { duration: 0.6, ease: "easeOut" as const }
     }
 
     return (
-        <main className="min-h-screen bg-primary flex flex-col font-sans relative overflow-x-hidden">
+        <main className="min-h-screen bg-[#090D16] text-white flex flex-col font-sans relative overflow-x-hidden">
+            {/* Ambient gradients */}
+            <div className="absolute top-0 right-1/4 w-[800px] h-[450px] bg-gradient-to-b from-sky-600/15 via-cyan-500/5 to-transparent blur-3xl pointer-events-none" />
+
             <Navbar />
 
             {/* Hero */}
-            <section className="relative min-h-[90vh] flex items-center justify-center pt-32 pb-20 px-4 md:px-12">
-                <div className="absolute inset-0 z-0 opacity-20 mix-blend-overlay pointer-events-none"
-                    style={{ backgroundImage: "url('https://static.wixstatic.com/media/c837a6_51db7f706561479b9f9f7570f739e702~mv2.png')", backgroundSize: 'cover', backgroundPosition: 'center' }} />
-                <div className="absolute inset-0 z-0 bg-gradient-to-t from-primary via-primary/95 to-primary/60 pointer-events-none" />
-
-                <div className="max-w-6xl w-full mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                    <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, delay: 0.2, ease: "easeOut" as const }}>
-                        <div className="inline-flex items-center gap-3 mb-8 border-l-2 border-gold pl-4">
-                            <span className="text-xs font-bold uppercase tracking-[0.3em] text-gold">Corporate Solutions</span>
+            <section className="relative min-h-[85vh] flex items-center justify-center pt-32 pb-20 px-4 sm:px-6 lg:px-12">
+                <div className="max-w-7xl w-full mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <motion.div 
+                        initial={{ opacity: 0, x: -30 }} 
+                        animate={{ opacity: 1, x: 0 }} 
+                        transition={{ duration: 0.8, ease: "easeOut" as const }}
+                    >
+                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium mb-8">
+                            <Building2 size={14} />
+                            <span>Business & Commercial Banking</span>
                         </div>
-                        <h1 className="text-5xl md:text-7xl font-light text-accent tracking-tighter mb-8 leading-[1.1]">
-                            Banking for the <br /><span className="font-medium text-gold">Modern Enterprise.</span>
+                        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6 leading-[1.1]">
+                            Banking built for the <br />
+                            <span className="bg-gradient-to-r from-sky-400 via-cyan-300 to-emerald-400 bg-clip-text text-transparent">
+                                modern enterprise.
+                            </span>
                         </h1>
-                        <p className="text-lg text-accent/60 mb-10 leading-relaxed font-light">
-                            Scale your operations globally with dedicated treasury management, high-volume AP/AR processing, and flawless API integration built for hyper-growth businesses.
+                        <p className="text-lg text-slate-300 mb-10 leading-relaxed font-normal max-w-xl">
+                            Empower your business with multi-currency accounts, automated contractor and employee payroll, unlimited corporate cards, and real-time ERP accounting synchronization.
                         </p>
-                        <div className="flex flex-col sm:flex-row gap-5">
-                            <Link href="/verify" className="bg-gold text-primary px-10 py-5 font-medium text-sm tracking-widest uppercase hover:bg-gold-dark transition-colors inline-flex items-center justify-center">Open Business Account</Link>
-                            <Link href="/support" className="px-10 py-5 font-medium text-sm tracking-widest uppercase text-accent border border-gold hover:bg-gold/5 transition-colors inline-flex items-center justify-center">Contact Sales</Link>
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <Link 
+                                href="/register" 
+                                className="bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-400 hover:to-sky-400 text-slate-950 font-semibold px-8 py-4 rounded-xl shadow-lg shadow-cyan-500/20 transition-all flex items-center justify-center gap-2 group"
+                            >
+                                Open Business Account
+                                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                            <Link 
+                                href="/contact" 
+                                className="px-8 py-4 rounded-xl font-medium text-slate-200 border border-slate-700 hover:border-slate-500 hover:bg-slate-800/40 transition-all flex items-center justify-center gap-2"
+                            >
+                                Contact Sales
+                            </Link>
                         </div>
                     </motion.div>
 
-                    <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" as const }} className="hidden lg:block">
-                        <div className="absolute -inset-4 border border-gold/20 -z-10" />
-                        <div className="bg-primary-light border border-gold/20 p-10">
-                            <div className="flex justify-between items-center border-b border-gold/10 pb-6 mb-8">
-                                <h3 className="text-accent text-sm font-light uppercase tracking-widest">Enterprise Dashboard</h3>
-                                <span className="text-gold text-[10px] font-mono uppercase tracking-widest">Live</span>
+                    {/* Live Corporate Overview Mock */}
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.95 }} 
+                        animate={{ opacity: 1, scale: 1 }} 
+                        transition={{ duration: 0.9, delay: 0.2, ease: "easeOut" as const }} 
+                        className="hidden lg:block"
+                    >
+                        <div className="relative rounded-3xl bg-slate-900/80 border border-slate-800 p-8 shadow-2xl backdrop-blur-xl">
+                            <div className="flex justify-between items-center pb-6 border-b border-slate-800 mb-6">
+                                <div>
+                                    <h3 className="text-white font-semibold text-base">KeyTrust Enterprise Portal</h3>
+                                    <p className="text-slate-400 text-xs">Acme Global Technologies Inc.</p>
+                                </div>
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> 40 Currencies Ready
+                                </span>
                             </div>
-                            <div className="space-y-5 mb-8">
+
+                            <div className="space-y-4 mb-6">
                                 {[
-                                    { label: "Operating Cash", value: "$4,250,000.00", gold: false },
-                                    { label: "Treasury Yield (YTD)", value: "+ 5.24%", gold: true },
-                                    { label: "Pending Wires", value: "12 transactions", gold: false },
-                                    { label: "Active Virtual Cards", value: "48 issued", gold: false },
-                                    { label: "Monthly Payroll", value: "$820,000.00", gold: false },
+                                    { label: "Operating Treasury (USD)", value: "$3,450,000.00", highlight: false },
+                                    { label: "Euro Treasury Vault (EUR)", value: "€1,280,450.00", highlight: false },
+                                    { label: "Corporate Yield Growth (APY)", value: "+ 5.24% Compounding", highlight: true },
+                                    { label: "Active Team Cards", value: "32 Issued & Active", highlight: false },
+                                    { label: "Pending Vendor Wires", value: "4 Wires Processing", highlight: false },
                                 ].map((row, i) => (
-                                    <div key={i} className="flex justify-between items-center py-2 border-b border-gold/5">
-                                        <span className="text-accent/50 text-sm uppercase tracking-widest">{row.label}</span>
-                                        <span className={`font-mono text-sm ${row.gold ? 'text-gold' : 'text-accent'}`}>{row.value}</span>
+                                    <div key={i} className="flex justify-between items-center py-2.5 px-3.5 rounded-xl bg-slate-950/40 border border-slate-800/60">
+                                        <span className="text-slate-400 text-xs font-medium">{row.label}</span>
+                                        <span className={`font-mono text-sm font-semibold ${row.highlight ? 'text-emerald-400' : 'text-slate-100'}`}>
+                                            {row.value}
+                                        </span>
                                     </div>
                                 ))}
                             </div>
-                            <button className="w-full border border-gold/30 text-gold py-4 text-xs font-bold uppercase tracking-[0.2em] hover:bg-gold/5 transition-colors">
-                                Access Corporate Vault
-                            </button>
+
+                            <div className="pt-2">
+                                <Link 
+                                    href="/register" 
+                                    className="w-full py-3.5 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500 hover:text-slate-950 font-semibold text-xs tracking-wider uppercase transition-all flex items-center justify-center gap-2"
+                                >
+                                    Explore Enterprise Demo
+                                </Link>
+                            </div>
                         </div>
                     </motion.div>
                 </div>
             </section>
 
-            {/* Core Features */}
-            <section className="py-24 px-4 md:px-12 bg-primary-light border-y border-gold/10">
+            {/* Core Infrastructure */}
+            <section className="py-24 px-4 sm:px-6 lg:px-12 bg-slate-900/40 border-y border-slate-800/80">
                 <div className="max-w-7xl mx-auto">
                     <motion.div {...fadeIn} className="text-center mb-16">
-                        <h2 className="text-4xl md:text-5xl font-light text-accent tracking-tighter mb-4">Institutional <span className="text-gold font-medium">Infrastructure.</span></h2>
-                        <p className="text-accent/50 text-sm uppercase tracking-widest max-w-xl mx-auto">Built for complexity. Designed for scale.</p>
+                        <p className="text-cyan-400 font-semibold text-xs tracking-wider uppercase mb-3">Enterprise Capabilities</p>
+                        <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-white mb-4">
+                            Built for complexity. <span className="text-cyan-400">Designed for scale.</span>
+                        </h2>
+                        <p className="text-slate-400 text-base max-w-2xl mx-auto">
+                            Whether you're a fast-moving seed startup or a multinational enterprise, KeyTrust Pay powers your financial operations effortlessly.
+                        </p>
                     </motion.div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {[
-                            { icon: <Globe2 size={24} />, title: "Global Treasury", desc: "Manage multi-currency accounts across 40+ jurisdictions with institutional FX rates." },
-                            { icon: <BarChart3 size={24} />, title: "ERP Integration", desc: "Native connectors for NetSuite, QuickBooks, Xero, and SAP. Eliminate manual data entry." },
-                            { icon: <ShieldCheck size={24} />, title: "Role-Based Access", desc: "Granular permission tiers. Define 3-layer approval workflows for any transaction type." },
-                            { icon: <Users size={24} />, title: "Payroll Management", desc: "Automate multi-currency payroll for global teams. Full tax and compliance reporting." },
-                            { icon: <Layers size={24} />, title: "Subsidiary Management", desc: "Control multiple subsidiary accounts from one master dashboard with consolidated reporting." },
-                            { icon: <Zap size={24} />, title: "Real-Time Payments", desc: "Sub-second settlement on domestic transfers. International wires in under 4 hours." },
+                            { icon: <Globe2 size={24} />, title: "Global Treasury", desc: "Hold, convert, and pay out in 40+ currencies at real mid-market foreign exchange rates with zero hidden spreads." },
+                            { icon: <BarChart3 size={24} />, title: "ERP & Accounting Sync", desc: "Automate bookkeeping with native two-way sync for QuickBooks, Xero, NetSuite, and custom accounting webhooks." },
+                            { icon: <ShieldCheck size={24} />, title: "Custom Approval Flows", desc: "Define multi-level authorization rules for wire transfers, bill payments, and high-value transactions." },
+                            { icon: <Users size={24} />, title: "Automated Global Payroll", desc: "Pay domestic staff and international remote contractors across 140+ countries on scheduled payment dates." },
+                            { icon: <Layers size={24} />, title: "Multi-Entity Accounts", desc: "Manage parent companies, sister entities, and regional subsidiaries from a single master dashboard." },
+                            { icon: <Zap size={24} />, title: "Fast Settlement Rails", desc: "Lightning-fast domestic ACH and instant RTP routing, plus fast SWIFT wires delivered with transparent tracking." },
                         ].map((f, i) => (
-                            <motion.div key={i} whileHover={{ y: -4 }} className="p-8 border border-gold/10 hover:border-gold/30 transition-all group bg-primary">
-                                <div className="w-12 h-12 border border-gold/20 flex items-center justify-center text-gold mb-6 group-hover:bg-gold group-hover:text-primary transition-all">{f.icon}</div>
-                                <h3 className="text-xl font-medium text-accent mb-3 group-hover:text-gold transition-colors">{f.title}</h3>
-                                <p className="text-accent/50 text-sm leading-relaxed">{f.desc}</p>
+                            <motion.div 
+                                key={i} 
+                                whileHover={{ y: -6 }} 
+                                className="p-8 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-cyan-500/40 transition-all duration-300 group"
+                            >
+                                <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition-transform">
+                                    {f.icon}
+                                </div>
+                                <h3 className="text-xl font-semibold text-white mb-3 group-hover:text-cyan-300 transition-colors">{f.title}</h3>
+                                <p className="text-slate-400 text-sm leading-relaxed">{f.desc}</p>
                             </motion.div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Pricing Tiers */}
-            <section className="py-24 px-4 md:px-12 bg-primary border-b border-gold/10">
+            {/* Transparent Pricing */}
+            <section className="py-24 px-4 sm:px-6 lg:px-12 relative">
                 <div className="max-w-7xl mx-auto">
                     <motion.div {...fadeIn} className="text-center mb-16">
-                        <p className="text-gold font-mono text-[10px] tracking-[0.3em] uppercase mb-4">Transparent Pricing</p>
-                        <h2 className="text-4xl md:text-5xl font-light text-accent tracking-tighter">Plans that <span className="text-gold font-medium">scale with you.</span></h2>
+                        <p className="text-cyan-400 font-semibold text-xs tracking-wider uppercase mb-3">Transparent Plans</p>
+                        <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-white">
+                            Clear pricing that <span className="text-cyan-400">scales with your growth.</span>
+                        </h2>
                     </motion.div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {[
                             {
-                                tier: "Starter", price: "$0", period: "/ month", desc: "Perfect for early-stage startups and sole traders.",
-                                features: ["1 Business Account", "50 free transactions/month", "2 user seats", "Standard FX rates", "Email support"],
+                                tier: "Starter", price: "$0", period: "/ month", desc: "Ideal for early-stage companies, solo founders, and freelancers.",
+                                features: ["1 Primary Business Account", "50 free monthly transfers", "Up to 3 team member seats", "Standard FX conversion rates", "24/7 in-app support"],
                                 cta: "Start Free", highlight: false
                             },
                             {
-                                tier: "Growth", price: "$49", period: "/ month", desc: "For scaling teams with growing transaction volume.",
-                                features: ["3 Business Accounts", "500 free transactions/month", "10 user seats", "Preferential FX rates", "Priority support", "ERP integration"],
+                                tier: "Growth", price: "$49", period: "/ month", desc: "For scaling teams with growing payment volume and multiple users.",
+                                features: ["5 Multi-Currency Accounts", "500 free monthly transfers", "15 team seats with permission tiers", "Discounted FX rates", "ERP & Accounting sync", "Priority concierge support"],
                                 cta: "Get Started", highlight: true
                             },
                             {
-                                tier: "Enterprise", price: "Custom", period: "pricing", desc: "Tailored for corporations with complex global needs.",
-                                features: ["Unlimited accounts", "Unlimited transactions", "Unlimited user seats", "Institutional FX rates", "Dedicated relationship manager", "Custom API contracts"],
+                                tier: "Enterprise", price: "Custom", period: "tailored", desc: "For established corporations with custom compliance & treasury needs.",
+                                features: ["Unlimited entity accounts", "Unlimited monthly transactions", "Unlimited team seats & role controls", "Institutional FX spreads", "Dedicated Account Manager", "Full custom REST API access"],
                                 cta: "Contact Sales", highlight: false
                             },
                         ].map((plan, i) => (
-                            <motion.div key={i} {...fadeIn} className={`border p-10 flex flex-col ${plan.highlight ? 'border-gold bg-primary-light' : 'border-gold/10 bg-primary'}`}>
-                                {plan.highlight && <div className="text-[10px] text-primary bg-gold font-bold uppercase tracking-widest px-3 py-1 w-fit mb-6">Most Popular</div>}
-                                <h3 className="text-2xl font-light text-accent mb-2">{plan.tier}</h3>
-                                <div className="mb-3">
-                                    <span className="text-4xl font-light text-gold tracking-tight">{plan.price}</span>
-                                    <span className="text-accent/40 text-sm ml-2">{plan.period}</span>
+                            <motion.div 
+                                key={i} 
+                                {...fadeIn} 
+                                className={`rounded-3xl p-8 sm:p-10 flex flex-col relative transition-all duration-300 ${
+                                    plan.highlight 
+                                        ? 'bg-slate-900 border-2 border-cyan-400/80 shadow-2xl shadow-cyan-500/10' 
+                                        : 'bg-slate-900/60 border border-slate-800'
+                                }`}
+                            >
+                                {plan.highlight && (
+                                    <div className="text-xs text-slate-950 bg-gradient-to-r from-cyan-400 to-sky-400 font-bold uppercase tracking-wider px-3.5 py-1 rounded-full w-fit mb-6">
+                                        Most Popular
+                                    </div>
+                                )}
+                                <h3 className="text-2xl font-bold text-white mb-2">{plan.tier}</h3>
+                                <div className="mb-4">
+                                    <span className="text-4xl font-extrabold text-white tracking-tight">{plan.price}</span>
+                                    <span className="text-slate-400 text-sm ml-2">{plan.period}</span>
                                 </div>
-                                <p className="text-accent/50 text-sm mb-8 font-light">{plan.desc}</p>
-                                <ul className="space-y-3 mb-10 flex-1">
+                                <p className="text-slate-400 text-sm mb-8">{plan.desc}</p>
+                                <ul className="space-y-3.5 mb-10 flex-1">
                                     {plan.features.map((f, j) => (
-                                        <li key={j} className="flex items-center gap-3 text-accent/70 text-sm">
-                                            <CheckCircle2 size={14} className="text-gold shrink-0" />
+                                        <li key={j} className="flex items-center gap-3 text-slate-300 text-sm">
+                                            <CheckCircle2 size={16} className="text-emerald-400 shrink-0" />
                                             {f}
                                         </li>
                                     ))}
                                 </ul>
-                                <Link href="/verify" className={`w-full py-4 text-center text-sm font-bold uppercase tracking-widest transition-colors ${plan.highlight ? 'bg-gold text-primary hover:bg-gold-dark' : 'border border-gold/30 text-gold hover:bg-gold/5'}`}>
+                                <Link 
+                                    href={plan.tier === 'Enterprise' ? '/contact' : '/register'} 
+                                    className={`w-full py-4 rounded-xl text-center text-sm font-semibold transition-all ${
+                                        plan.highlight 
+                                            ? 'bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-400 hover:to-sky-400 text-slate-950 shadow-lg shadow-cyan-500/20' 
+                                            : 'bg-slate-800 text-white hover:bg-slate-700 border border-slate-700'
+                                    }`}
+                                >
                                     {plan.cta}
                                 </Link>
                             </motion.div>
@@ -146,49 +215,53 @@ export default function BusinessPage() {
             </section>
 
             {/* Corporate Cards */}
-            <section className="py-24 px-4 md:px-12 bg-primary-light border-b border-gold/10">
+            <section className="py-24 px-4 sm:px-6 lg:px-12 bg-slate-900/40 border-b border-slate-800/80">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                     <motion.div {...fadeIn}>
-                        <p className="text-gold font-mono text-[10px] tracking-[0.3em] uppercase mb-6">Corporate Cards</p>
-                        <h2 className="text-3xl md:text-4xl font-light text-accent tracking-tighter mb-8 leading-tight">
-                            Unprecedented <span className="text-gold font-medium">expense control.</span>
+                        <p className="text-cyan-400 font-semibold text-xs tracking-wider uppercase mb-4">Expense Management</p>
+                        <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-white mb-6 leading-tight">
+                            Total corporate <br />
+                            <span className="text-cyan-400">spend control.</span>
                         </h2>
-                        <ul className="space-y-5">
+                        <ul className="space-y-4">
                             {[
-                                "Issue unlimited virtual cards for distinct vendor payments",
-                                "Set dynamic spend limits by department, project, or employee",
-                                "Real-time expense tracking with automated receipt matching",
-                                "1.5% unlimited cash back applied directly to principal balance",
-                                "Instant card freeze and dispute filing from the dashboard",
+                                "Issue unlimited virtual corporate cards in seconds for online subscriptions and ad spend",
+                                "Set dynamic spend caps by employee, department, project, or vendor",
+                                "Automated receipt capture with SMS and mobile notifications after every swipe",
+                                "1.5% unlimited cash back automatically credited to your principal balance",
+                                "Instant one-tap freeze and real-time fraud monitoring",
                             ].map((item, i) => (
-                                <li key={i} className="flex items-start gap-4 text-accent/70 text-sm font-light">
-                                    <CheckCircle2 size={18} className="text-gold shrink-0 mt-0.5" />
-                                    {item}
+                                <li key={i} className="flex items-start gap-3.5 text-slate-300 text-sm font-normal">
+                                    <CheckCircle2 size={18} className="text-cyan-400 shrink-0 mt-0.5" />
+                                    <span>{item}</span>
                                 </li>
                             ))}
                         </ul>
-                        <Link href="/verify" className="mt-10 inline-flex items-center gap-3 text-gold uppercase tracking-widest text-xs font-bold hover:gap-5 transition-all">
-                            Apply for Corporate Card <ArrowRight size={14} />
-                        </Link>
+                        <div className="mt-8">
+                            <Link href="/register" className="inline-flex items-center gap-2 text-cyan-400 font-semibold text-sm hover:gap-3 transition-all">
+                                Get Corporate Cards for Your Team <ArrowRight size={16} />
+                            </Link>
+                        </div>
                     </motion.div>
-                    <motion.div {...fadeIn} className="bg-primary border border-gold/20 p-10">
-                        <div className="space-y-4">
-                            <div className="flex justify-between items-center pb-4 border-b border-gold/10">
-                                <span className="text-accent/50 text-xs uppercase tracking-widest">March 2026 Expenses</span>
-                                <span className="text-gold font-mono text-sm">$48,240.00 total</span>
-                            </div>
+
+                    <motion.div {...fadeIn} className="rounded-3xl bg-slate-900/80 border border-slate-800 p-8 shadow-2xl">
+                        <div className="flex justify-between items-center pb-4 border-b border-slate-800 mb-6">
+                            <span className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Department Spend (Current Month)</span>
+                            <span className="text-cyan-400 font-mono text-sm font-bold">$54,280.00 total</span>
+                        </div>
+                        <div className="space-y-5">
                             {[
-                                { dept: "Engineering", amount: "$18,400", pct: 38, color: "bg-gold" },
-                                { dept: "Marketing", amount: "$12,200", pct: 25, color: "bg-gold/60" },
-                                { dept: "Operations", amount: "$9,800", pct: 20, color: "bg-gold/40" },
-                                { dept: "HR & Admin", amount: "$7,840", pct: 17, color: "bg-gold/20" },
+                                { dept: "Engineering & Cloud", amount: "$22,400", pct: 41, color: "bg-cyan-400" },
+                                { dept: "Marketing & Growth", amount: "$14,600", pct: 27, color: "bg-sky-400" },
+                                { dept: "Operations & Logistics", amount: "$10,200", pct: 19, color: "bg-emerald-400" },
+                                { dept: "Office & HR", amount: "$7,080", pct: 13, color: "bg-indigo-400" },
                             ].map((item, i) => (
-                                <div key={i} className="pt-2">
-                                    <div className="flex justify-between text-sm mb-2">
-                                        <span className="text-accent/70">{item.dept}</span>
-                                        <span className="text-accent font-mono">{item.amount}</span>
+                                <div key={i} className="space-y-1.5">
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-slate-300 font-medium">{item.dept}</span>
+                                        <span className="text-slate-100 font-mono font-semibold">{item.amount}</span>
                                     </div>
-                                    <div className="h-1 bg-primary-light rounded-full overflow-hidden">
+                                    <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                                         <div className={`h-full ${item.color} rounded-full`} style={{ width: `${item.pct}%` }} />
                                     </div>
                                 </div>
@@ -198,13 +271,20 @@ export default function BusinessPage() {
                 </div>
             </section>
 
-            {/* CTA */}
-            <section className="py-24 px-4 md:px-12 bg-gold text-center">
+            {/* Bottom CTA */}
+            <section className="py-20 px-4 sm:px-6 lg:px-12 bg-gradient-to-b from-slate-900 to-[#090D16] text-center relative">
                 <motion.div {...fadeIn} className="max-w-3xl mx-auto">
-                    <h2 className="text-4xl font-light text-primary tracking-tighter mb-6">Ready to elevate your <span className="font-bold">Enterprise?</span></h2>
-                    <p className="text-primary/70 mb-10 font-light">Join industry leaders executing billions through optimanexgen's fiscal network.</p>
-                    <Link href="/verify" className="bg-primary text-gold px-12 py-5 font-bold tracking-[0.2em] uppercase inline-flex items-center gap-4 hover:bg-primary-light transition-colors">
-                        Initiate Onboarding <ArrowRight size={18} />
+                    <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-white mb-6">
+                        Ready to elevate your <span className="text-cyan-400">business finances?</span>
+                    </h2>
+                    <p className="text-slate-300 mb-10 text-base max-w-xl mx-auto">
+                        Join forward-thinking companies running their global treasury and payments on KeyTrust Pay.
+                    </p>
+                    <Link 
+                        href="/register" 
+                        className="bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-400 hover:to-sky-400 text-slate-950 font-semibold px-10 py-5 rounded-xl shadow-lg shadow-cyan-500/25 inline-flex items-center gap-3 transition-all text-base"
+                    >
+                        Get Started in Minutes <ArrowRight size={18} />
                     </Link>
                 </motion.div>
             </section>

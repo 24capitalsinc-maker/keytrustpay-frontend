@@ -38,7 +38,7 @@ export default function ForgotPasswordPage() {
     const onSubmit = async (data: any) => {
         setLoading(true)
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/auth/forgot-password`, {
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/auth/forgot-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
@@ -53,11 +53,9 @@ export default function ForgotPasswordPage() {
     }
 
     return (
-        <main className="min-h-screen bg-primary flex flex-col relative overflow-x-hidden font-sans">
-            {/* Editorial background */}
-            <div className="absolute inset-0 z-0 opacity-15 mix-blend-overlay pointer-events-none"
-                style={{ backgroundImage: "url('https://static.wixstatic.com/media/c837a6_51db7f706561479b9f9f7570f739e702~mv2.png')", backgroundSize: 'cover', backgroundPosition: 'center' }} />
-            <div className="absolute inset-0 z-0 bg-gradient-to-br from-primary via-primary to-primary-light/40 pointer-events-none" />
+        <main className="min-h-screen bg-[#090D16] text-white flex flex-col relative overflow-x-hidden font-sans">
+            {/* Ambient gradients */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-sky-500/15 via-cyan-500/5 to-transparent blur-3xl pointer-events-none" />
 
             <Navbar />
 
@@ -71,146 +69,129 @@ export default function ForgotPasswordPage() {
                     {/* Back to Login */}
                     <Link
                         href="/login"
-                        className="inline-flex items-center gap-2 text-accent/40 hover:text-gold text-[10px] uppercase tracking-[0.25em] font-bold transition-colors mb-8"
+                        className="inline-flex items-center gap-2 text-slate-400 hover:text-cyan-400 text-xs font-semibold uppercase tracking-wider transition-colors mb-6"
                     >
-                        <ArrowLeft size={12} />
+                        <ArrowLeft size={14} />
                         Back to Login
                     </Link>
 
-                    <div className="bg-primary-light border border-gold/20 relative overflow-hidden">
-                        {/* Corner accent */}
-                        <div className="absolute top-0 left-0 w-16 h-[2px] bg-gold" />
-                        <div className="absolute top-0 left-0 w-[2px] h-16 bg-gold" />
+                    <div className="rounded-3xl bg-slate-900/90 border border-slate-800 p-8 sm:p-10 shadow-2xl backdrop-blur-xl">
+                        <AnimatePresence mode="wait">
+                            {/* ===== FORM PHASE ===== */}
+                            {phase === 'form' && (
+                                <motion.div
+                                    key="form"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                >
+                                    <div className="mb-8">
+                                        <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-6">
+                                            <Mail size={22} />
+                                        </div>
+                                        <h2 className="text-2xl font-bold text-white mb-2">
+                                            Reset Password
+                                        </h2>
+                                        <p className="text-slate-400 text-sm leading-relaxed">
+                                            Enter the email address registered with your KeyTrust Pay account and we'll send you a password recovery link.
+                                        </p>
+                                    </div>
 
-                        <div className="p-10 md:p-12">
-                            <AnimatePresence mode="wait">
-                                {/* ===== FORM PHASE ===== */}
-                                {phase === 'form' && (
-                                    <motion.div
-                                        key="form"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                    >
-                                        {/* Header */}
-                                        <div className="mb-10 pb-8 border-b border-gold/10">
-                                            <div className="flex items-center gap-3 mb-6">
-                                                <div className="w-9 h-9 bg-primary border border-gold/30 flex items-center justify-center">
-                                                    <Mail size={14} className="text-gold" />
-                                                </div>
-                                                <span className="text-gold font-mono text-[10px] tracking-[0.3em] uppercase">Account Recovery</span>
-                                            </div>
-                                            <h2 className="text-3xl font-light text-accent mb-3 tracking-tight">
-                                                Reset Password.
-                                            </h2>
-                                            <p className="text-accent/50 font-light text-sm leading-relaxed">
-                                                Enter the email address linked to your optimanexgen account and we'll send you a secure reset link.
-                                            </p>
+                                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-semibold text-slate-300 block">
+                                                Email Address
+                                            </label>
+                                            <input
+                                                {...register('email')}
+                                                type="email"
+                                                autoFocus
+                                                className="w-full bg-slate-950/60 border border-slate-800 focus:border-cyan-400 rounded-xl px-4 py-3.5 outline-none transition-colors text-white placeholder:text-slate-600 text-sm"
+                                                placeholder="you@example.com"
+                                            />
+                                            {errors.email && (
+                                                <p className="text-red-400 text-xs mt-1">{errors.email.message as string}</p>
+                                            )}
                                         </div>
 
-                                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-7">
-                                            <div className="space-y-2">
-                                                <label className="text-[10px] font-bold uppercase tracking-[0.25em] text-accent/40 block">
-                                                    Email Address
-                                                </label>
-                                                <input
-                                                    {...register('email')}
-                                                    type="email"
-                                                    autoFocus
-                                                    className="w-full bg-primary border border-gold/20 focus:border-gold px-5 py-4 outline-none transition-colors text-accent placeholder:text-accent/20 font-light text-sm"
-                                                    placeholder="client@optimanexgen.org"
-                                                />
-                                                {errors.email && (
-                                                    <p className="text-red-400 text-xs mt-1">{errors.email.message as string}</p>
-                                                )}
-                                            </div>
-
-                                            <button
-                                                type="submit"
-                                                disabled={loading}
-                                                className="w-full bg-gold text-primary font-bold tracking-[0.2em] uppercase py-5 hover:bg-gold-dark transition-colors flex items-center justify-center gap-3 disabled:opacity-50 text-sm"
-                                            >
-                                                {loading
-                                                    ? <><Loader2 className="animate-spin" size={18} /> Sending Reset Link…</>
-                                                    : <><Mail size={16} /> Send Reset Link</>
-                                                }
-                                            </button>
-                                        </form>
-
-                                        <div className="mt-8 pt-6 border-t border-gold/10 text-center">
-                                            <p className="text-xs text-accent/40 uppercase tracking-[0.15em]">
-                                                Remembered it?{' '}
-                                                <Link href="/login" className="text-gold font-bold ml-1 hover:text-gold-dark transition-colors">
-                                                    Back to Login
-                                                </Link>
-                                            </p>
-                                        </div>
-                                    </motion.div>
-                                )}
-
-                                {/* ===== SUCCESS PHASE ===== */}
-                                {phase === 'sent' && (
-                                    <motion.div
-                                        key="sent"
-                                        initial={{ opacity: 0, scale: 0.96 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        className="text-center flex flex-col items-center gap-6 py-8"
-                                    >
-                                        <motion.div
-                                            initial={{ scale: 0 }}
-                                            animate={{ scale: 1 }}
-                                            transition={{ type: 'spring', stiffness: 280, damping: 22, delay: 0.1 }}
-                                            className="w-20 h-20 bg-green-500/10 border border-green-500/30 rounded-full flex items-center justify-center"
+                                        <button
+                                            type="submit"
+                                            disabled={loading}
+                                            className="w-full bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-400 hover:to-sky-400 text-slate-950 font-semibold py-4 rounded-xl transition-all shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2 text-sm disabled:opacity-50"
                                         >
-                                            <CheckCircle2 size={36} className="text-green-400" strokeWidth={1.5} />
-                                        </motion.div>
+                                            {loading
+                                                ? <><Loader2 className="animate-spin" size={16} /> Sending Link…</>
+                                                : <><Mail size={16} /> Send Recovery Link</>
+                                            }
+                                        </button>
+                                    </form>
 
-                                        <div>
-                                            <h3 className="text-2xl font-light text-accent mb-3">Check your inbox.</h3>
-                                            <p className="text-accent/50 text-sm font-light leading-relaxed">
-                                                If <span className="text-gold font-medium">{submittedEmail}</span> is registered with optimanexgen, you'll receive a password reset link within a few minutes.
-                                            </p>
-                                        </div>
-
-                                        <div className="w-full bg-primary border border-gold/10 p-5 text-left space-y-2">
-                                            <p className="text-[10px] text-gold uppercase tracking-widest font-bold mb-3">What to do next</p>
-                                            {[
-                                                "Check your inbox (and spam folder) for an email from noreply@optimanexgen.org",
-                                                "Click the secure reset link in the email — it expires in 15 minutes",
-                                                "Create a new strong password and log back in",
-                                            ].map((step, i) => (
-                                                <div key={i} className="flex items-start gap-3">
-                                                    <span className="text-gold font-mono text-xs shrink-0 mt-0.5">{i + 1}.</span>
-                                                    <span className="text-accent/60 text-xs leading-relaxed">{step}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-
-                                        <div className="flex flex-col gap-3 w-full pt-2">
-                                            <button
-                                                onClick={() => setPhase('form')}
-                                                className="w-full border border-gold/20 text-accent/50 py-4 text-xs uppercase tracking-widest hover:border-gold/40 hover:text-gold transition-colors"
-                                            >
-                                                Use a Different Email
-                                            </button>
-                                            <Link
-                                                href="/login"
-                                                className="w-full bg-gold text-primary py-4 text-xs font-bold uppercase tracking-widest text-center hover:bg-gold-dark transition-colors"
-                                            >
-                                                Return to Login
+                                    <div className="mt-8 pt-6 border-t border-slate-800 text-center">
+                                        <p className="text-xs text-slate-400">
+                                            Remembered your password?{' '}
+                                            <Link href="/login" className="text-cyan-400 font-semibold hover:underline ml-1">
+                                                Sign In
                                             </Link>
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
+                                        </p>
+                                    </div>
+                                </motion.div>
+                            )}
+
+                            {/* ===== SUCCESS PHASE ===== */}
+                            {phase === 'sent' && (
+                                <motion.div
+                                    key="sent"
+                                    initial={{ opacity: 0, scale: 0.96 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    className="text-center flex flex-col items-center gap-6 py-4"
+                                >
+                                    <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center text-emerald-400">
+                                        <CheckCircle2 size={32} />
+                                    </div>
+
+                                    <div>
+                                        <h3 className="text-2xl font-bold text-white mb-2">Check your email</h3>
+                                        <p className="text-slate-300 text-sm leading-relaxed">
+                                            If an account exists for <span className="text-cyan-400 font-medium">{submittedEmail}</span>, a secure password reset link has been dispatched.
+                                        </p>
+                                    </div>
+
+                                    <div className="w-full bg-slate-950/60 rounded-2xl border border-slate-800 p-5 text-left space-y-2.5">
+                                        <p className="text-xs text-cyan-400 font-semibold uppercase tracking-wider">Next Steps</p>
+                                        {[
+                                            "Check your inbox (and spam folder) for an email from support@keytrustpay.org",
+                                            "Click the secure reset link in the email (valid for 15 minutes)",
+                                            "Set your new strong password and sign back in",
+                                        ].map((step, i) => (
+                                            <div key={i} className="flex items-start gap-2.5 text-xs text-slate-300">
+                                                <span className="text-cyan-400 font-bold shrink-0">{i + 1}.</span>
+                                                <span>{step}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="flex flex-col gap-3 w-full pt-2">
+                                        <button
+                                            onClick={() => setPhase('form')}
+                                            className="w-full border border-slate-800 text-slate-400 hover:text-white py-3 rounded-xl text-xs font-semibold uppercase tracking-wider transition-colors"
+                                        >
+                                            Try Another Email
+                                        </button>
+                                        <Link
+                                            href="/login"
+                                            className="w-full bg-slate-800 hover:bg-slate-700 text-white py-3 rounded-xl text-xs font-semibold uppercase tracking-wider text-center transition-colors"
+                                        >
+                                            Return to Login
+                                        </Link>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
 
-                    {/* Trust badge */}
-                    <div className="flex items-center justify-center gap-3 mt-6 text-accent/25">
-                        <Shield size={12} />
-                        <span className="text-[10px] uppercase tracking-[0.3em] font-medium">256-bit SSL Encrypted</span>
-                        <Shield size={12} />
+                    <div className="flex items-center justify-center gap-2 mt-6 text-slate-500 text-xs">
+                        <Shield size={14} className="text-cyan-400" />
+                        <span>Protected by 256-bit SSL Encryption</span>
                     </div>
                 </motion.div>
             </div>

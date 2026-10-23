@@ -2,34 +2,34 @@
 import Navbar from '@/components/Navbar'
 import Sidebar from '@/components/Sidebar'
 import TransferForm from '@/components/TransferForm'
+import { ShieldCheck } from 'lucide-react'
 
 export default function TransferPage() {
     return (
-        <main className="min-h-screen bg-primary flex flex-col relative overflow-x-hidden">
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay" style={{ backgroundImage: "url('https://static.wixstatic.com/media/c837a6_51db7f706561479b9f9f7570f739e702~mv2.png')", backgroundSize: 'cover' }} />
-
+        <main className="min-h-screen bg-slate-950 flex flex-col relative overflow-x-hidden font-sans">
             <Navbar />
 
-            <div className="flex flex-1 pt-20">
+            <div className="flex flex-1 pt-16 relative z-10">
                 <Sidebar />
-                <div className="flex-1 min-w-0 p-6 md:p-12 lg:pl-80 z-10">
-                    <div className="max-w-4xl mx-auto">
-                        <header className="mb-14 border-b border-gold/10 pb-10">
-                            <div className="flex items-center gap-3 mb-4">
-                                <span className="bg-gold/10 text-gold text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-gold/20">Secure Channel</span>
-                                <div className="h-[1px] w-8 bg-gold/20"></div>
+                <div className="flex-1 min-w-0 p-4 sm:p-6 md:p-8 lg:pl-72 z-10">
+                    <div className="max-w-3xl mx-auto">
+                        <header className="mb-8 border-b border-slate-800 pb-6">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-xs font-semibold mb-3">
+                                <ShieldCheck size={14} />
+                                <span>Encrypted 256-Bit Transfer</span>
                             </div>
-                            <h1 className="text-4xl md:text-5xl font-light text-accent tracking-tighter">
-                                Optima <span className="text-gold font-medium">Transfer.</span>
+                            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                                Send Money Worldwide
                             </h1>
-                            <p className="text-accent/40 mt-3 text-sm tracking-wide font-light max-w-xl">Execute encrypted global wealth transfers with institutional grade security and real-time settlement.</p>
+                            <p className="text-xs sm:text-sm text-slate-400 mt-1">
+                                Transfer funds instantly to domestic accounts, international banks via SWIFT/IBAN, or multi-currency wallets.
+                            </p>
                         </header>
 
                         <div>
                             <TransferForm />
                         </div>
                     </div>
-
                 </div>
             </div>
         </main>

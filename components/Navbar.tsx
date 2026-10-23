@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useAuthStore } from '@/store/useAuthStore'
-import { LogOut, User as UserIcon, Menu, X, ChevronRight } from 'lucide-react'
+import { LogOut, User as UserIcon, Menu, X, ArrowRight, ShieldCheck, ChevronRight } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { usePathname } from 'next/navigation'
@@ -20,17 +20,17 @@ export default function Navbar() {
     useEffect(() => {
         setMounted(true)
         fetchSettings()
-        const handleScroll = () => setScrolled(window.scrollY > 20)
+        const handleScroll = () => setScrolled(window.scrollY > 15)
         window.addEventListener('scroll', handleScroll)
         return () => window.removeEventListener('scroll', handleScroll)
-    }, [])
+    }, [fetchSettings])
 
     const navLinks = [
-        { label: 'Home', href: '/' },
-        { label: 'Business', href: '/business' },
         { label: 'Personal', href: '/personal' },
+        { label: 'Business', href: '/business' },
         { label: 'Cards', href: '/cards' },
         { label: 'Loans', href: '/loans' },
+        { label: 'Contact', href: '/contact' },
         { label: 'Support', href: '/support' },
     ]
 
@@ -43,200 +43,250 @@ export default function Navbar() {
     }
 
     return (
-        <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-1000 ${scrolled ? 'py-4 bg-primary/80 backdrop-blur-2xl border-b border-gold/10' : 'py-5 bg-transparent'
-            }`}>
-            <div className="absolute inset-0 bg-silk opacity-5 pointer-events-none" />
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 flex justify-between items-center relative z-10 w-full">
-                {/* Left: Branding */}
-                <div className="flex-1 flex justify-start items-center gap-4 md:gap-8">
-                    <Link href="/" className="flex items-center gap-2 md:gap-4 group">
-                        <img
-                            src={settings?.logoUrl || '/logo.png'}
-                            alt={settings?.companyName || 'Optima Nexgen'}
-                            className="h-7 md:h-10 w-auto object-contain transition-transform duration-700 group-hover:scale-105"
-                        />
-                        <span className="text-[10px] md:text-lg font-light tracking-[0.2em] text-accent uppercase">
-                            {settings?.logoText || 'Optima'}<span className="text-gold font-medium">{settings?.logoAccent || 'Nexgen'}</span>
-                        </span>
-                    </Link>
-                    {isDashboard ? (
-                        <div className="hidden md:flex items-center gap-4">
-                            <div className="h-[30px] w-px bg-gold/10"></div>
-                            <span className="text-[9px] font-bold text-gold uppercase tracking-[0.5em] px-4 py-2 bg-gold/5 border border-gold/10">My Account</span>
+        <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
+            scrolled 
+                ? 'py-3.5 bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 shadow-lg shadow-black/20' 
+                : 'py-5 bg-transparent'
+        }`}>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center w-full">
+                {/* Left: Brand Identity */}
+                <div className="flex items-center gap-6">
+                    <Link href="/" className="flex items-center gap-3 group">
+                        <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-blue-600 via-sky-500 to-cyan-400 p-[1.5px] shadow-md shadow-sky-500/20 group-hover:scale-105 transition-transform duration-300">
+                            <div className="h-full w-full bg-slate-950 rounded-[10px] flex items-center justify-center overflow-hidden">
+                                <img
+                                    src="/favicon.svg"
+                                    alt="KeyTrust Pay"
+                                    className="h-6 w-6 object-contain"
+                                />
+                            </div>
                         </div>
-                    ) : null}
-                </div>
+                        <div className="flex items-center gap-1.5">
+                            <span className="text-lg font-bold text-white tracking-tight">KeyTrust</span>
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-extrabold uppercase bg-sky-500/15 text-sky-400 border border-sky-500/30">
+                                Pay
+                            </span>
+                        </div>
+                    </Link>
 
-                {/* Center: Desktop Nav Links */}
-                <div className="flex-none hidden xl:flex justify-center items-center">
-                    {!isDashboard && !isAdmin && (
-                        <div className="flex items-center gap-2 text-[10px] tracking-[0.3em] uppercase font-bold">
-                            {navLinks.map((link) => (
-                                <Link
-                                    key={link.href}
-                                    href={link.href}
-                                    className={`px-5 py-2 transition-all duration-500 relative group ${isActive(link.href)
-                                        ? 'text-gold'
-                                        : 'text-accent/40 hover:text-accent'
-                                        }`}
-                                >
-                                    {link.label}
-                                    {/* Active underline indicator */}
-                                    <div className={`absolute -bottom-1 left-1/2 -translate-x-1/2 h-[1px] bg-gold/60 transition-all duration-700 ${isActive(link.href) ? 'w-8' : 'w-0 group-hover:w-4'
-                                        }`} />
-                                </Link>
-                            ))}
+                    {isDashboard && (
+                        <div className="hidden md:flex items-center gap-2 pl-3 border-l border-slate-800">
+                            <span className="text-[11px] font-semibold text-sky-400 px-2.5 py-1 rounded-full bg-sky-500/10 border border-sky-500/20">
+                                Client Portal
+                            </span>
+                        </div>
+                    )}
+                    {isAdmin && (
+                        <div className="hidden md:flex items-center gap-2 pl-3 border-l border-slate-800">
+                            <span className="text-[11px] font-semibold text-rose-400 px-2.5 py-1 rounded-full bg-rose-500/10 border border-rose-500/20">
+                                Admin Console
+                            </span>
                         </div>
                     )}
                 </div>
 
-                {/* Right: Desktop Auth & User Profile */}
-                <div className="flex-1 hidden xl:flex justify-end items-center">
-                    {mounted && (user ? (
-                        <div className="flex items-center gap-8">
-                            <Link href="/dashboard" className="text-[10px] font-bold tracking-[0.3em] uppercase text-accent hover:text-gold transition-all duration-500 flex items-center gap-3 group">
-                                <div className="w-8 h-8 rounded-full border border-gold/20 flex items-center justify-center group-hover:border-gold transition-colors overflow-hidden">
-                                    {user.profileImage ? (
-                                        <img src={user.profileImage} className="w-full h-full object-cover" alt={user.name} />
-                                    ) : (
-                                        <UserIcon size={14} className="text-gold" />
-                                    )}
-                                </div>
-                                <span className="">{user.name}</span>
-                            </Link>
-                            <button
-                                onClick={logout}
-                                className="text-accent/30 hover:text-red-500/80 transition-all duration-500 hover:scale-110"
-                            >
-                                <LogOut size={18} strokeWidth={1.5} />
-                            </button>
-                        </div>
-                    ) : (
-                        <div className="flex items-center gap-6">
-                            <Link href="/login" className="text-[10px] font-bold tracking-[0.4em] uppercase text-accent/50 hover:text-gold transition-all duration-500 whitespace-nowrap">
-                                Sign In
-                            </Link>
-                            <Link
-                                href="/verify"
-                                className="group relative bg-gold text-primary px-8 py-3 font-bold tracking-[0.2em] uppercase text-[10px] overflow-hidden shadow-2xl shadow-gold/10 whitespace-nowrap"
-                            >
-                                <span className="relative z-10">Open Account</span>
-                                <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-                            </Link>
-                        </div>
+                {/* Center: Desktop Navigation */}
+                <div className="hidden lg:flex items-center gap-1">
+                    {!isDashboard && !isAdmin && navLinks.map((link) => (
+                        <Link
+                            key={link.href}
+                            href={link.href}
+                            className={`px-3.5 py-2 text-xs font-medium rounded-lg transition-all duration-200 ${
+                                isActive(link.href)
+                                    ? 'text-sky-400 bg-sky-500/10'
+                                    : 'text-slate-300 hover:text-white hover:bg-slate-900/60'
+                            }`}
+                        >
+                            {link.label}
+                        </Link>
                     ))}
                 </div>
 
-                {/* Mobile Toggle */}
-                <div className="flex-1 flex xl:hidden justify-end items-center gap-4">
-                    {user && (
-                        <Link href="/settings" className="w-8 h-8 rounded-full border border-gold/20 flex items-center justify-center overflow-hidden">
-                            {user.profileImage ? (
-                                <img src={user.profileImage} className="w-full h-full object-cover" alt={user.name} />
-                            ) : (
-                                <span className="text-[8px] text-gold font-bold">{user.name?.[0]}</span>
-                            )}
-                        </Link>
+                {/* Right: Auth Actions */}
+                <div className="hidden sm:flex items-center gap-3">
+                    {mounted && user ? (
+                        <div className="flex items-center gap-4">
+                            <Link 
+                                href={user.role === 'admin' ? '/admin' : '/dashboard'} 
+                                className="flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-800 hover:border-sky-500/50 transition-all text-xs text-slate-200"
+                            >
+                                <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center overflow-hidden text-[10px] font-bold text-white">
+                                    {user.profileImage ? (
+                                        <img src={user.profileImage} className="w-full h-full object-cover" alt={user.name} />
+                                    ) : (
+                                        user.name?.[0] || 'U'
+                                    )}
+                                </div>
+                                <span className="font-medium max-w-[120px] truncate">{user.name?.split(' ')[0]}</span>
+                            </Link>
+                            <button
+                                onClick={logout}
+                                title="Sign Out"
+                                className="p-2 text-slate-400 hover:text-rose-400 transition-colors"
+                            >
+                                <LogOut size={16} />
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-2.5">
+                            <Link 
+                                href="/login" 
+                                className="px-4 py-2 text-xs font-semibold text-slate-200 hover:text-white transition-colors"
+                            >
+                                Sign In
+                            </Link>
+                            <Link
+                                href="/register"
+                                className="px-4 py-2 text-xs font-semibold text-white bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-400 rounded-lg shadow-md shadow-sky-500/20 hover:opacity-95 transition-opacity"
+                            >
+                                Open Account
+                            </Link>
+                        </div>
                     )}
+                </div>
+
+                {/* Mobile Hamburger Button */}
+                <div className="flex lg:hidden items-center gap-2">
                     <button
-                        className="text-accent hover:text-gold transition-all duration-500"
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 focus:outline-none"
+                        aria-label="Toggle Navigation Menu"
                     >
-                        {mobileMenuOpen ? <X size={24} strokeWidth={1} /> : <Menu size={24} strokeWidth={1} />}
+                        {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
                     </button>
                 </div>
             </div>
 
-            {/* Mobile Menu */}
+            {/* Mobile Navigation Drawer */}
             <AnimatePresence>
                 {mobileMenuOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="xl:hidden absolute top-full left-0 w-full bg-primary border-b border-gold/10"
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="lg:hidden border-b border-slate-800 bg-slate-950/95 backdrop-blur-2xl overflow-hidden"
                     >
-                        <div className="px-6 py-10 flex flex-col gap-2 font-light uppercase tracking-[0.15em]">
-                            {/* Mobile User Identity Header */}
-                            {user && (
-                                <div className="mb-8 p-6 bg-gold/5 border border-gold/10 flex items-center gap-6">
-                                    <div className="w-16 h-16 rounded-full border border-gold/30 p-1 flex items-center justify-center overflow-hidden">
-                                        {user.profileImage ? (
-                                            <img src={user.profileImage} className="w-full h-full rounded-full object-cover" alt={user.name} />
-                                        ) : (
-                                            <div className="w-full h-full rounded-full bg-gold/10 flex items-center justify-center text-gold text-xl font-light">
-                                                {user.name?.[0]}
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <p className="text-gold text-sm font-bold tracking-widest truncate">{user.name}</p>
-                                        <p className="text-accent/30 text-[9px] font-medium tracking-[0.3em] uppercase">Premium Institutional Tier</p>
-                                    </div>
+                        <div className="px-4 pt-4 pb-6 space-y-3">
+                            {!isDashboard && !isAdmin ? (
+                                <div className="space-y-1">
+                                    {navLinks.map((link) => (
+                                        <Link
+                                            key={link.href}
+                                            href={link.href}
+                                            onClick={() => setMobileMenuOpen(false)}
+                                            className={`block px-3 py-2.5 rounded-lg text-sm font-medium ${
+                                                isActive(link.href)
+                                                    ? 'text-sky-400 bg-sky-500/10'
+                                                    : 'text-slate-300 hover:bg-slate-900'
+                                            }`}
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    ))}
                                 </div>
-                            )}
-                            {!isDashboard && !isAdmin && navLinks.map((link) => (
-                                <Link
-                                    key={link.href}
-                                    href={link.href}
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className={`text-lg py-3 border-b border-gold/5 transition-colors flex justify-between items-center ${isActive(link.href)
-                                        ? 'text-gold border-gold/20'
-                                        : 'text-accent hover:text-gold'
-                                        }`}
-                                >
-                                    {link.label}
-                                    {isActive(link.href) && (
-                                        <span className="w-2 h-2 rounded-full bg-gold" />
-                                    )}
-                                </Link>
-                            ))}
-                            <div className="pt-6 mt-2">
-                                {mounted && (user ? (
-                                    <Link href="/dashboard" className="bg-gold text-primary p-5 font-medium flex justify-between items-center">
-                                        Dashboard <ChevronRight size={20} />
-                                    </Link>
-                                ) : (
-                                    <div className="flex flex-col gap-4">
-                                        <Link href="/login" className="border border-gold/30 text-accent p-5 text-center text-sm font-medium hover:bg-gold/5">Sign In</Link>
-                                        <Link href="/verify" className="bg-gold text-primary p-5 text-center text-sm font-medium hover:bg-gold-dark">Open an Account</Link>
-                                    </div>
-                                ))}
-                            </div>
-
-                            {/* Mobile Dashboard Contextual Menu */}
-                            {(isDashboard || isAdmin) && (
-                                <div className="mt-8 pt-8 border-t border-gold/10">
-                                    <p className={`text-[10px] font-bold uppercase tracking-[0.3em] mb-6 ${isAdmin ? 'text-red-500/40' : 'text-gold/40'}`}>
-                                        {isAdmin ? 'Admin Menu' : 'My Account'}
-                                    </p>
-                                    <div className="grid grid-cols-1 gap-2">
-                                        {(isAdmin ? adminLinks : dashboardLinks).map((link) => (
+                            ) : isDashboard ? (
+                                <div className="space-y-1">
+                                    <p className="px-3 py-1 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Account Navigation</p>
+                                    {dashboardLinks.map((link) => {
+                                        const isLinkActive = pathname === link.href
+                                        return (
                                             <Link
                                                 key={link.href}
                                                 href={link.href}
                                                 onClick={() => setMobileMenuOpen(false)}
-                                                className={`flex items-center gap-4 p-4 border transition-all ${pathname === link.href
-                                                    ? (isAdmin ? 'bg-red-500/10 border-red-500/20 text-red-400' : 'bg-gold/10 border-gold/20 text-gold')
-                                                    : 'border-gold/5 text-accent/60'}`}
+                                                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium ${
+                                                    isLinkActive
+                                                        ? 'text-sky-400 bg-sky-500/10'
+                                                        : 'text-slate-300 hover:bg-slate-900'
+                                                }`}
                                             >
-                                                <span className="text-xs font-bold uppercase tracking-widest">{link.name}</span>
+                                                <link.icon size={16} className={isLinkActive ? 'text-sky-400' : 'text-slate-400'} />
+                                                <span>{link.name}</span>
                                             </Link>
-                                        ))}
+                                        )
+                                    })}
+                                    {user?.role === 'admin' && (
+                                        <Link
+                                            href="/admin"
+                                            onClick={() => setMobileMenuOpen(false)}
+                                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-rose-400 bg-rose-500/10 border border-rose-500/20 mt-2"
+                                        >
+                                            <ShieldCheck size={16} className="text-rose-400" />
+                                            <span>Switch to Admin Console</span>
+                                        </Link>
+                                    )}
+                                </div>
+                            ) : isAdmin ? (
+                                <div className="space-y-1">
+                                    <p className="px-3 py-1 text-[10px] font-bold text-rose-400 uppercase tracking-wider">Admin Navigation</p>
+                                    {adminLinks.map((link) => {
+                                        const isLinkActive = pathname === link.href
+                                        return (
+                                            <Link
+                                                key={link.href}
+                                                href={link.href}
+                                                onClick={() => setMobileMenuOpen(false)}
+                                                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium ${
+                                                    isLinkActive
+                                                        ? 'text-rose-400 bg-rose-500/10'
+                                                        : 'text-slate-300 hover:bg-slate-900'
+                                                }`}
+                                            >
+                                                <link.icon size={16} className={isLinkActive ? 'text-rose-400' : 'text-slate-400'} />
+                                                <span>{link.name}</span>
+                                            </Link>
+                                        )
+                                    })}
+                                    <Link
+                                        href="/dashboard"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-sky-400 bg-sky-500/10 border border-sky-500/20 mt-2"
+                                    >
+                                        <UserIcon size={16} className="text-sky-400" />
+                                        <span>Switch to Client Portal</span>
+                                    </Link>
+                                </div>
+                            ) : null}
 
-                                        {/* Mobile Logout Action */}
+                            <div className="pt-4 border-t border-slate-800/80 space-y-2">
+                                {mounted && user ? (
+                                    <>
+                                        <Link
+                                            href={user.role === 'admin' ? '/admin' : '/dashboard'}
+                                            onClick={() => setMobileMenuOpen(false)}
+                                            className="block w-full text-center py-2.5 text-xs font-semibold text-white bg-slate-900 rounded-lg border border-slate-800"
+                                        >
+                                            Go to Dashboard ({user.name})
+                                        </Link>
                                         <button
                                             onClick={() => {
                                                 logout();
                                                 setMobileMenuOpen(false);
                                             }}
-                                            className={`flex items-center gap-4 p-4 border border-red-500/20 bg-red-500/5 text-red-400 mt-4 transition-all active:scale-95`}
+                                            className="block w-full text-center py-2.5 text-xs font-semibold text-rose-400 bg-rose-500/10 rounded-lg border border-rose-500/20"
                                         >
-                                            <span className="text-xs font-bold uppercase tracking-widest">Logout</span>
+                                            Sign Out
                                         </button>
+                                    </>
+                                ) : (
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <Link
+                                            href="/login"
+                                            onClick={() => setMobileMenuOpen(false)}
+                                            className="text-center py-2.5 text-xs font-semibold text-slate-200 bg-slate-900 rounded-lg border border-slate-800"
+                                        >
+                                            Sign In
+                                        </Link>
+                                        <Link
+                                            href="/register"
+                                            onClick={() => setMobileMenuOpen(false)}
+                                            className="text-center py-2.5 text-xs font-semibold text-white bg-gradient-to-r from-blue-600 to-cyan-500 rounded-lg shadow-sm"
+                                        >
+                                            Open Account
+                                        </Link>
                                     </div>
-                                </div>
-                            )}
+                                )}
+                            </div>
                         </div>
                     </motion.div>
                 )}

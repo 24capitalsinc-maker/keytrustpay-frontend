@@ -49,24 +49,24 @@ export default function SmoothSelect({
     }, [])
 
     return (
-        <div className={cn("space-y-4 relative w-full", className)} ref={containerRef}>
+        <div className={cn("space-y-2 relative w-full", className)} ref={containerRef}>
             {label && (
-                <div className="flex items-center gap-3 text-gold/40 mb-2">
-                    {TriggerIcon}
-                    <label className="text-[10px] font-bold uppercase tracking-[0.2em]">{label}</label>
+                <div className="flex items-center gap-2 text-slate-400 text-xs font-semibold uppercase tracking-wider">
+                    {TriggerIcon && <span className="text-cyan-400">{TriggerIcon}</span>}
+                    <label>{label}</label>
                 </div>
             )}
 
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full flex items-center justify-between bg-primary/20 border-b border-gold/20 p-4 focus:border-gold outline-none transition-all group"
+                className="w-full flex items-center justify-between bg-slate-900/70 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 focus:border-cyan-500/50 rounded-xl px-4 py-3 text-left outline-none transition-all duration-200 group shadow-inner"
             >
-                <div className="flex items-center gap-4">
-                    {activeOption?.icon && <div className="text-gold/60">{activeOption.icon}</div>}
+                <div className="flex items-center gap-3 min-w-0">
+                    {activeOption?.icon && <div className="text-cyan-400 shrink-0">{activeOption.icon}</div>}
                     <span className={cn(
-                        "text-lg font-light tracking-tight transition-colors",
-                        activeOption ? "text-accent" : "text-accent/20"
+                        "text-sm font-medium truncate",
+                        activeOption ? "text-white" : "text-slate-500"
                     )}>
                         {activeOption ? activeOption.label : placeholder}
                     </span>
@@ -74,8 +74,8 @@ export default function SmoothSelect({
                 <ChevronDown
                     size={16}
                     className={cn(
-                        "text-gold/40 transition-transform duration-500",
-                        isOpen && "rotate-180 text-gold"
+                        "text-slate-400 transition-transform duration-300 shrink-0 ml-2 group-hover:text-slate-200",
+                        isOpen && "rotate-180 text-cyan-400"
                     )}
                 />
             </button>
@@ -83,43 +83,44 @@ export default function SmoothSelect({
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        initial={{ opacity: 0, y: 6, scale: 0.98 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-                        className="absolute z-[300] left-0 right-0 mt-2 bg-primary/95 backdrop-blur-3xl border border-gold/10 shadow-2xl overflow-hidden"
+                        exit={{ opacity: 0, y: 4, scale: 0.98 }}
+                        transition={{ duration: 0.18, ease: "easeOut" }}
+                        className="absolute z-[300] left-0 right-0 mt-2 bg-slate-900/95 backdrop-blur-xl border border-slate-800 rounded-xl shadow-2xl p-1.5 overflow-hidden"
                     >
-                        <div className="py-2 max-h-[300px] overflow-y-auto no-scrollbar">
-                            {options.map((option, index) => (
-                                <motion.button
-                                    key={option.value}
-                                    type="button"
-                                    initial={{ opacity: 0, x: -10 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: index * 0.03 }}
-                                    onClick={() => {
-                                        onChange(option.value)
-                                        setIsOpen(false)
-                                    }}
-                                    className={cn(
-                                        "w-full flex items-center justify-between px-6 py-4 transition-all hover:bg-gold/10 group/item",
-                                        value === option.value ? "bg-gold/5" : "bg-transparent"
-                                    )}
-                                >
-                                    <div className="flex items-center gap-4 text-left">
-                                        {option.icon && <div className="text-gold/40 group-hover/item:text-gold transition-colors">{option.icon}</div>}
-                                        <span className={cn(
-                                            "text-sm tracking-[0.1em] transition-colors uppercase font-medium",
-                                            value === option.value ? "text-gold" : "text-accent/60 group-hover/item:text-accent"
-                                        )}>
-                                            {option.label}
-                                        </span>
-                                    </div>
-                                    {value === option.value && (
-                                        <Check size={14} className="text-gold" />
-                                    )}
-                                </motion.button>
-                            ))}
+                        <div className="max-h-[260px] overflow-y-auto space-y-1 pr-1">
+                            {options.map((option) => {
+                                const isSelected = value === option.value
+                                return (
+                                    <button
+                                        key={option.value}
+                                        type="button"
+                                        onClick={() => {
+                                            onChange(option.value)
+                                            setIsOpen(false)
+                                        }}
+                                        className={cn(
+                                            "w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm transition-all duration-150 text-left",
+                                            isSelected
+                                                ? "bg-cyan-500/15 text-cyan-300 font-medium"
+                                                : "text-slate-300 hover:text-white hover:bg-slate-800/80"
+                                        )}
+                                    >
+                                        <div className="flex items-center gap-2.5 truncate">
+                                            {option.icon && (
+                                                <div className={cn("shrink-0", isSelected ? "text-cyan-400" : "text-slate-400")}>
+                                                    {option.icon}
+                                                </div>
+                                            )}
+                                            <span className="truncate">{option.label}</span>
+                                        </div>
+                                        {isSelected && (
+                                            <Check size={16} className="text-cyan-400 shrink-0 ml-2" />
+                                        )}
+                                    </button>
+                                )
+                            })}
                         </div>
                     </motion.div>
                 )}

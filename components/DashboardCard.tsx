@@ -32,66 +32,50 @@ export default function DashboardCard({
         setTimeout(() => setCopied(false), 2000)
     }
 
-    const getFontSizeClass = (val: string | number) => {
-        const length = String(val).length
-        if (length > 20) return "text-xs sm:text-sm lg:text-base xl:text-lg"
-        if (length > 15) return "text-sm sm:text-base lg:text-lg xl:text-xl"
-        if (length > 12) return "text-base sm:text-lg lg:text-xl xl:text-2xl"
-        return "text-lg sm:text-xl lg:text-2xl xl:text-3xl"
-    }
-
     const valueToShow = isSensitive && !isVisible ? "••••••••" : value
 
     return (
         <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true as const }}
-            transition={{ duration: 1 }}
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4 }}
             className="group"
         >
-            <div className="bg-primary/40 backdrop-blur-3xl border border-gold/20 p-6 sm:p-10 h-full relative overflow-hidden transition-all duration-1000 hover:border-gold/50 shadow-2xl group-hover:bg-primary/60">
-                {/* Prestige Textures */}
-                <div className="absolute inset-0 bg-silk opacity-10 pointer-events-none" />
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gold/5 rounded-full blur-3xl -mr-16 -mt-16 transition-all duration-1000 group-hover:bg-gold/15" />
-
-                {/* Architectural Accents */}
-                <div className="absolute top-0 left-0 w-16 h-[1px] bg-gold/20" />
-                <div className="absolute top-0 left-0 w-[1px] h-16 bg-gold/20" />
-
-                <div className="flex justify-between items-start relative z-10 mb-10">
-                    <div>
-                        <p className="text-[10px] uppercase font-bold tracking-[0.3em] text-accent/40 group-hover:text-gold transition-colors duration-700">{title}</p>
-                    </div>
-                    <div className="flex items-center gap-4">
+            <div className="bg-slate-900/80 border border-slate-800/90 rounded-2xl p-6 h-full relative overflow-hidden transition-all duration-300 hover:border-sky-500/40 shadow-xl hover:shadow-2xl hover:shadow-sky-500/5 backdrop-blur-xl">
+                {/* Header */}
+                <div className="flex justify-between items-start mb-4">
+                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{title}</p>
+                    <div className="flex items-center gap-2">
                         {isSensitive && onToggle && (
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     onToggle();
                                 }}
-                                className="w-8 h-8 rounded-full border border-gold/10 flex items-center justify-center hover:bg-gold/10 hover:border-gold/30 transition-all duration-500 text-gold/40 hover:text-gold"
+                                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
                                 title={isVisible ? "Hide details" : "Show details"}
                             >
-                                {isVisible ? <EyeOff size={14} /> : <Eye size={14} />}
+                                {isVisible ? <EyeOff size={15} /> : <Eye size={15} />}
                             </button>
                         )}
-                        <div className="w-12 h-12 bg-primary/40 border border-gold/10 flex items-center justify-center transition-all duration-1000 group-hover:border-gold group-hover:rotate-[360deg] shadow-inner">
-                            <Icon size={18} className="text-gold/40 group-hover:text-gold transition-colors duration-700" strokeWidth={1} />
+                        <div className="h-9 w-9 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 group-hover:scale-105 transition-transform">
+                            <Icon size={18} />
                         </div>
                     </div>
                 </div>
 
-                <div className="relative z-10">
-                    <div className="flex items-center gap-4 mb-4">
+                {/* Content */}
+                <div>
+                    <div className="flex items-center gap-3">
                         <AnimatePresence mode="wait">
                             <motion.h3
                                 key={isVisible ? 'visible' : 'hidden'}
-                                initial={{ opacity: 0, y: 5 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -5 }}
-                                transition={{ duration: 0.3 }}
-                                className={`${getFontSizeClass(valueToShow)} font-medium text-accent tracking-tight transition-all duration-700 group-hover:tracking-normal whitespace-nowrap overflow-visible`}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight truncate"
                                 title={String(value)}
                             >
                                 {valueToShow}
@@ -100,23 +84,18 @@ export default function DashboardCard({
                         {isCopyable && (!isSensitive || isVisible) && (
                             <button
                                 onClick={handleCopy}
-                                className="p-2 text-gold/30 hover:text-gold transition-colors"
-                                title="Copy to clipboard"
+                                className="p-1 rounded-md text-slate-400 hover:text-sky-400 hover:bg-slate-800 transition-colors shrink-0"
+                                title="Copy account number"
                             >
-                                {copied ? <Check size={16} /> : <Copy size={16} />}
+                                {copied ? <Check size={15} className="text-emerald-400" /> : <Copy size={15} />}
                             </button>
                         )}
                     </div>
                     {subtitle && (
-                        <div className="flex items-center gap-3">
-                            <div className="h-[1px] w-6 bg-gold/20" />
-                            <p className="text-[10px] uppercase font-bold tracking-[0.1em] text-gold/50">{subtitle}</p>
-                        </div>
+                        <p className="text-xs text-slate-400 mt-2 font-medium">
+                            {subtitle}
+                        </p>
                     )}
-                </div>
-
-                <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
-                    <div className="text-[9px] text-gold/30 font-mono tracking-widest uppercase">Verified Ledger</div>
                 </div>
             </div>
         </motion.div>

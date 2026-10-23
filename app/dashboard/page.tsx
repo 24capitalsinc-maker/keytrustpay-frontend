@@ -1,12 +1,11 @@
 'use client'
 import { useEffect, useState } from 'react'
-import SmoothSelect from '@/components/SmoothSelect'
 import Navbar from '@/components/Navbar'
 import Sidebar from '@/components/Sidebar'
 import DashboardCard from '@/components/DashboardCard'
 import TransactionTable from '@/components/TransactionTable'
 import Link from 'next/link';
-import { Wallet, CreditCard, ShieldHalf, ArrowDownUp, ArrowRight } from 'lucide-react';
+import { Wallet, CreditCard, ShieldCheck, ArrowRight, Send, ArrowUpRight, ArrowDownLeft, RefreshCw, AlertCircle } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore'
 import { motion } from 'framer-motion'
 import api from '@/lib/api'
@@ -19,7 +18,6 @@ export default function DashboardPage() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [showSensitiveInfo, setShowSensitiveInfo] = useState(true)
-    const [quarter, setQuarter] = useState('Q1')
     const router = useRouter()
 
     useEffect(() => {
@@ -38,13 +36,10 @@ export default function DashboardPage() {
                 setTransactions(transactionsRes.data)
             } catch (err: any) {
                 if (err.response) {
-                    // Server responded with an error (401, 403, 500, token mismatch etc)
-                    // → clear the stale session and send to login
                     logout()
                     router.push('/login')
                 } else {
-                    // No response at all (backend unreachable, network down)
-                    setError('Could not connect to the server. Please check your connection and try again.')
+                    setError('Could not connect to the server. Please check your internet connection.')
                 }
             } finally {
                 setLoading(false)
@@ -52,305 +47,177 @@ export default function DashboardPage() {
         }
 
         fetchProfile()
-    }, [accessToken, router])
+    }, [accessToken, router, logout])
 
     if (loading) return (
-        <main className="min-h-screen bg-primary flex items-center justify-center">
-            <div className="flex flex-col items-center gap-6">
-                <div className="w-12 h-12 border-2 border-gold border-t-transparent rounded-full animate-spin" />
-                <p className="text-gold text-[10px] font-bold tracking-[0.4em] uppercase animate-pulse">Loading Your Account</p>
+        <main className="min-h-screen bg-slate-950 flex items-center justify-center">
+            <div className="flex flex-col items-center gap-4">
+                <div className="w-10 h-10 border-2 border-sky-400 border-t-transparent rounded-full animate-spin" />
+                <p className="text-sky-400 text-xs font-semibold tracking-wider uppercase">Loading Account...</p>
             </div>
         </main>
     )
 
     if (error) return (
-        <main className="min-h-screen bg-primary flex items-center justify-center">
-            <div className="flex flex-col items-center gap-6 text-center px-6 max-w-md">
-                <div className="w-16 h-16 border border-gold/20 flex items-center justify-center">
-                    <ShieldHalf size={28} className="text-gold/40" />
+        <main className="min-h-screen bg-slate-950 flex items-center justify-center">
+            <div className="flex flex-col items-center gap-4 text-center px-6 max-w-md">
+                <div className="w-12 h-12 rounded-full bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
+                    <AlertCircle size={24} />
                 </div>
-                <p className="text-[10px] text-gold font-bold uppercase tracking-[0.4em]">Connection Error</p>
-                <p className="text-accent/60 text-sm font-light">{error}</p>
+                <h3 className="text-lg font-bold text-white">Connection Error</h3>
+                <p className="text-slate-400 text-xs leading-relaxed">{error}</p>
                 <button
                     onClick={() => { setError(null); setLoading(true); window.location.reload(); }}
-                    className="bg-gold text-primary px-8 py-3 text-[10px] font-bold uppercase tracking-[0.3em] hover:scale-105 transition-transform"
+                    className="px-6 py-2.5 rounded-xl bg-sky-500 text-slate-950 font-semibold text-xs hover:bg-sky-400 transition-colors"
                 >
-                    Retry
+                    Retry Connection
                 </button>
             </div>
         </main>
     )
 
-    if (!profile) return (
-        <main className="min-h-screen bg-primary flex items-center justify-center">
-            <div className="flex flex-col items-center gap-6">
-                <div className="w-12 h-12 border-2 border-gold border-t-transparent rounded-full animate-spin" />
-                <p className="text-gold text-[10px] font-bold tracking-[0.4em] uppercase animate-pulse">Loading Your Account</p>
-            </div>
-        </main>
-    )
-
     return (
-        <main className="min-h-screen bg-primary flex flex-col relative overflow-x-hidden">
-            {/* Background Texture Overlay */}
-            <div className="absolute inset-0 bg-silk opacity-10 pointer-events-none z-0" />
-            <div className="absolute inset-0 bg-noise opacity-20 pointer-events-none z-0" />
-
+        <main className="min-h-screen bg-slate-950 flex flex-col relative overflow-x-hidden font-sans">
             <Navbar />
 
-            <div className="flex flex-1 pt-20 relative z-10">
+            <div className="flex flex-1 pt-16 relative z-10">
                 <Sidebar />
 
-                <div className="flex-1 min-w-0 p-4 sm:p-6 md:p-12 lg:pl-80 z-10">
-                    <header className="mb-14 md:mb-20 flex flex-col md:flex-row md:items-end justify-between gap-10 border-b border-gold/10 pb-10 md:pb-16">
-                        <div className="max-w-3xl">
-                            <div className="flex items-center gap-4 mb-6">
-                                <span className="bg-gold/10 text-gold text-[9px] font-bold px-4 py-2 border border-gold/20 uppercase tracking-[0.4em]">Verified Member</span>
-                                <div className="h-[1px] w-12 bg-gold/20"></div>
-                            </div>
-                            <div className="flex flex-col md:flex-row md:items-center gap-6 mb-6">
-                                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full border border-gold/20 p-1 flex items-center justify-center overflow-hidden">
+                <div className="flex-1 min-w-0 p-4 sm:p-6 md:p-8 lg:pl-72 z-10">
+                    {/* Welcome Banner */}
+                    <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-800/80">
+                        <div className="flex items-center gap-4">
+                            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-400 p-[1.5px] shrink-0">
+                                <div className="w-full h-full rounded-[14px] bg-slate-950 flex items-center justify-center overflow-hidden">
                                     {profile?.profileImage ? (
-                                        <img src={profile.profileImage} className="w-full h-full rounded-full object-cover" alt={profile.name} />
+                                        <img src={profile.profileImage} className="w-full h-full object-cover" alt={profile.name} />
                                     ) : (
-                                        <div className="w-full h-full rounded-full bg-gold/10 flex items-center justify-center text-gold text-2xl font-light">
-                                            {profile?.name?.[0]}
-                                        </div>
+                                        <span className="text-lg font-bold text-sky-400">
+                                            {profile?.name?.split(' ').map((n: string) => n[0]).join('').substring(0, 2) || 'KP'}
+                                        </span>
                                     )}
                                 </div>
-                                <div>
-                                    <h1 className="text-prestige text-3xl sm:text-4xl md:text-5xl lg:text-7xl text-accent leading-tight">
-                                        Account <span className="text-gold font-medium">Dashboard.</span>
-                                    </h1>
-                                    <p className="text-accent/30 mt-4 text-xs sm:text-sm tracking-widest font-light">Welcome back, {profile?.name}. Your account is up to date.</p>
-                                </div>
                             </div>
-                        </div>
-
-                        <button onClick={() => router.push('/transfer')} className="w-full md:w-auto group relative bg-gold text-primary px-10 py-5 font-bold text-[10px] tracking-[0.3em] uppercase transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-gold/10 overflow-hidden">
-                            <span className="relative z-10">Transfer Funds</span>
-                            <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-                        </button>
-                    </header>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-20">
-                        <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <DashboardCard
-                                title="Total Balance"
-                                value={`$${profile?.accountBalance?.toLocaleString(undefined, { minimumFractionDigits: 2 })}`}
-                                icon={Wallet}
-                                subtitle="Main Account"
-                                isSensitive={true}
-                                isVisible={showSensitiveInfo}
-                                onToggle={() => setShowSensitiveInfo(!showSensitiveInfo)}
-                            />
-                            <DashboardCard
-                                title="Account Number"
-                                value={profile?.accountNumber}
-                                icon={CreditCard}
-                                subtitle={`${profile?.accountType} Layer // ${profile?.currency}`}
-                                isSensitive={true}
-                                isVisible={showSensitiveInfo}
-                                onToggle={() => setShowSensitiveInfo(!showSensitiveInfo)}
-                                isCopyable={true}
-                            />
-                            <DashboardCard
-                                title="Security Mesh"
-                                value={profile?.isFrozen ? "RESTRICTED" : "VERIFIED"}
-                                icon={ShieldHalf}
-                                subtitle={profile?.isFrozen ? "Account Frozen" : "Secure"}
-                            />
-                        </div>
-
-                        {/* Market Ticker */}
-                        <div className="bg-primary/40 backdrop-blur-3xl border border-gold/20 p-8 flex flex-col justify-between group overflow-hidden relative shadow-2xl">
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-gold/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
                             <div>
-                                <p className="text-[9px] text-gold font-bold uppercase tracking-[0.4em] mb-6 border-b border-gold/10 pb-4">Market Rates</p>
-                                <div className="space-y-4">
-                                    <div className="flex justify-between items-center text-[10px] gap-2">
-                                        <span className="text-accent/30 font-light tracking-widest uppercase truncate">XAU / USD</span>
-                                        <span className="text-gold font-bold tabular-nums tracking-tighter whitespace-nowrap">$2,164.20</span>
-                                    </div>
-                                    <div className="flex justify-between items-center text-[10px] gap-2">
-                                        <span className="text-accent/30 font-light tracking-widest uppercase truncate">EUR / USD</span>
-                                        <span className="text-accent font-bold tabular-nums tracking-tighter whitespace-nowrap">1.0842</span>
-                                    </div>
-                                    <div className="flex justify-between items-center text-[10px] gap-2">
-                                        <span className="text-accent/30 font-light tracking-widest uppercase truncate">GBP / USD</span>
-                                        <span className="text-accent font-bold tabular-nums tracking-tighter whitespace-nowrap">1.2654</span>
-                                    </div>
+                                <div className="flex items-center gap-2">
+                                    <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                                        Hi, {profile?.name?.split(' ')[0]}
+                                    </h1>
+                                    <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                        Verified
+                                    </span>
                                 </div>
+                                <p className="text-xs text-slate-400 mt-1">
+                                    Welcome back to your KeyTrust Pay account.
+                                </p>
                             </div>
-                            <div className="mt-8 flex items-center justify-between opacity-30">
-                                <p className="text-[7px] text-accent/60 uppercase tracking-[0.4em] font-bold">Real-time settlement</p>
-                                <div className="w-1 h-1 bg-gold rounded-full animate-pulse" />
-                            </div>
+                        </div>
+
+                        {/* Quick Action Button */}
+                        <div className="flex items-center gap-3">
+                            <Link
+                                href="/transfer"
+                                className="w-full sm:w-auto px-5 py-2.5 rounded-xl font-semibold text-xs text-white bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-400 shadow-md shadow-sky-500/20 hover:opacity-95 transition-opacity flex items-center justify-center gap-2"
+                            >
+                                <Send size={14} />
+                                <span>Send Money</span>
+                            </Link>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                        <div className="lg:col-span-2 space-y-12">
-                            {/* Global Liquidity Distribution */}
-                            <div className="bg-primary/40 backdrop-blur-3xl border border-gold/10 p-10 relative overflow-hidden group shadow-2xl">
-                                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-12 border-b border-gold/5 pb-8 gap-4">
-                                    <h2 className="text-xl sm:text-2xl font-light text-accent tracking-tighter">Balance <span className="text-gold font-medium">Overview.</span></h2>
-                                </div>
+                    {/* Stats Cards */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
+                        <DashboardCard
+                            title="Total Available Balance"
+                            value={`$${profile?.accountBalance?.toLocaleString(undefined, { minimumFractionDigits: 2 })}`}
+                            icon={Wallet}
+                            subtitle="Primary Checking Account"
+                            isSensitive={true}
+                            isVisible={showSensitiveInfo}
+                            onToggle={() => setShowSensitiveInfo(!showSensitiveInfo)}
+                        />
+                        <DashboardCard
+                            title="Account Number"
+                            value={profile?.accountNumber}
+                            icon={CreditCard}
+                            subtitle={`${profile?.accountType || 'Savings'} • ${profile?.currency || 'USD'}`}
+                            isSensitive={true}
+                            isVisible={showSensitiveInfo}
+                            onToggle={() => setShowSensitiveInfo(!showSensitiveInfo)}
+                            isCopyable={true}
+                        />
+                        <DashboardCard
+                            title="Account Security"
+                            value={profile?.isFrozen ? "ON HOLD" : "PROTECTED"}
+                            icon={ShieldCheck}
+                            subtitle={profile?.isFrozen ? "Contact Support" : "256-Bit Encryption Active"}
+                        />
+                    </div>
 
-                                <div className="space-y-12">
-                                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 text-center sm:text-left">
-                                        <div className="group/item cursor-help">
-                                            <p className="text-lg sm:text-xl lg:text-2xl font-medium text-accent mb-2 tracking-tight">$72,400.00</p>
-                                            <p className="text-[10px] text-gold font-bold uppercase tracking-[0.2em] mb-4">Savings Ledger</p>
-                                            <div className="h-[2px] w-full bg-gold/20 rounded-full overflow-hidden">
-                                                <motion.div initial={{ width: 0 }} whileInView={{ width: '80%' }} transition={{ duration: 2 }} className="h-full bg-gold" />
-                                            </div>
-                                        </div>
-                                        <div className="group/item cursor-help">
-                                            <p className="text-lg sm:text-xl lg:text-2xl font-medium text-accent/60 mb-2 tracking-tight">€45,100.00</p>
-                                            <p className="text-[10px] text-accent/40 font-bold uppercase tracking-[0.2em] mb-4">Euro Business</p>
-                                            <div className="h-[2px] w-full bg-gold/5 rounded-full overflow-hidden">
-                                                <motion.div initial={{ width: 0 }} whileInView={{ width: '40%' }} transition={{ duration: 2 }} className="h-full bg-accent/20" />
-                                            </div>
-                                        </div>
-                                        <div className="group/item cursor-help">
-                                            <p className="text-lg sm:text-xl lg:text-2xl font-medium text-accent/60 mb-2 tracking-tight">£28,950.00</p>
-                                            <p className="text-[10px] text-accent/40 font-bold uppercase tracking-[0.2em] mb-4">UK Account</p>
-                                            <div className="h-[2px] w-full bg-gold/5 rounded-full overflow-hidden">
-                                                <motion.div initial={{ width: 0 }} whileInView={{ width: '30%' }} transition={{ duration: 2 }} className="h-full bg-accent/20" />
-                                            </div>
-                                        </div>
-                                        <div className="group/item cursor-help">
-                                            <p className="text-lg sm:text-xl lg:text-2xl font-medium text-accent/60 mb-2 tracking-tight">S$12,000.00</p>
-                                            <p className="text-[10px] text-accent/40 font-bold uppercase tracking-[0.2em] mb-4">Global Wallet</p>
-                                            <div className="h-[2px] w-full bg-gold/5 rounded-full overflow-hidden">
-                                                <motion.div initial={{ width: 0 }} whileInView={{ width: '15%' }} transition={{ duration: 2 }} className="h-full bg-accent/20" />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="p-4 sm:p-8 bg-gold/5 border border-gold/10 flex flex-col sm:flex-row items-center justify-between gap-4 group-hover:bg-gold/[0.08] transition-colors duration-500">
-                                        <div className="flex items-center gap-6">
-                                            <div className="relative">
-                                                <div className="w-3 h-3 rounded-full bg-gold animate-ping absolute inset-0" />
-                                                <div className="w-3 h-3 rounded-full bg-gold relative z-10" />
-                                            </div>
-                                            <div>
-                                                <p className="text-[10px] font-bold text-accent mb-1 uppercase tracking-widest">Auto-Rebalancing Active</p>
-                                            </div>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="text-[10px] font-bold text-gold uppercase tracking-[0.4em] underline underline-offset-8">Authorized</p>
-                                        </div>
-                                    </div>
+                    {/* Market Rates & Quick Conversion */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                        <div className="lg:col-span-2 rounded-2xl bg-slate-900/80 border border-slate-800 p-6 space-y-4">
+                            <div className="flex justify-between items-center pb-3 border-b border-slate-800">
+                                <div>
+                                    <h3 className="text-sm font-bold text-white">Live Exchange Rates</h3>
+                                    <p className="text-xs text-slate-400">Mid-market rate updated in real time</p>
                                 </div>
+                                <span className="text-[11px] font-semibold text-sky-400 px-2 py-0.5 rounded bg-sky-500/10">
+                                    0% Markup
+                                </span>
                             </div>
 
-                            {/* Insight Section */}
-                            <div className="bg-primary/40 backdrop-blur-3xl border border-gold/10 p-10 relative overflow-hidden group shadow-2xl">
-                                <div className="flex justify-between items-center mb-12 border-b border-gold/5 pb-8">
-                                    <h2 className="text-2xl font-light text-accent tracking-tighter">Spending <span className="text-gold font-medium">Insights.</span></h2>
-                                    <div className="w-32">
-                                        <SmoothSelect
-                                            value={quarter}
-                                            options={[
-                                                { value: 'Q1', label: 'Q1 2026' },
-                                                { value: 'Q4', label: 'Q4 2025' },
-                                            ]}
-                                            onChange={(val) => setQuarter(val)}
-                                            className="!space-y-0"
-                                        />
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-1">
+                                {[
+                                    { pair: 'EUR / USD', rate: '1.0842', change: '+0.15%' },
+                                    { pair: 'GBP / USD', rate: '1.2654', change: '+0.08%' },
+                                    { pair: 'CAD / USD', rate: '0.7350', change: '-0.04%' },
+                                    { pair: 'AUD / USD', rate: '0.6580', change: '+0.21%' },
+                                ].map((item, i) => (
+                                    <div key={i} className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-1">
+                                        <p className="text-[11px] font-medium text-slate-400">{item.pair}</p>
+                                        <p className="text-sm font-bold text-white tabular-nums">{item.rate}</p>
+                                        <p className="text-[10px] text-emerald-400 font-semibold">{item.change}</p>
                                     </div>
-                                </div>
-                                <div className="h-60 flex items-end gap-3 px-4">
-                                    {[65, 40, 85, 30, 95, 55, 75].map((h, i) => (
-                                        <div key={i} className="flex-1 flex flex-col items-center gap-6 group/bar">
-                                            <div className="relative w-full flex justify-center">
-                                                <motion.div
-                                                    initial={{ height: 0 }}
-                                                    whileInView={{ height: `${h}%` }}
-                                                    transition={{ duration: 1.5, delay: i * 0.1 }}
-                                                    className="w-full bg-gradient-to-t from-gold/5 via-gold/20 to-gold/40 border-t border-gold/60 relative overflow-hidden group-hover/bar:to-gold transition-all duration-700"
-                                                >
-                                                    <div className="absolute inset-0 bg-silk size-full opacity-20" />
-                                                </motion.div>
-                                            </div>
-                                            <span className="text-[8px] text-accent/20 font-bold uppercase tracking-[0.4em] group-hover/bar:text-gold transition-colors">{['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'][i]}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="mt-12 pt-10 border-t border-gold/5 flex flex-col sm:flex-row justify-between items-center gap-8">
-                                    <div className="flex flex-col sm:flex-row gap-8 sm:gap-16 w-full sm:w-auto">
-                                        <div>
-                                            <p className="text-[10px] text-accent/40 uppercase tracking-[0.2em] mb-2 font-bold">Peak Utilization</p>
-                                            <p className="text-sm font-medium text-accent tracking-tight">Friday // $1,240.24</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] text-accent/40 uppercase tracking-[0.2em] mb-2 font-bold">Mean Daily Flow</p>
-                                            <p className="text-sm font-medium text-accent tracking-tight">$420,00</p>
-                                        </div>
-                                    </div>
-                                    <Link href="/transactions" className="text-gold text-[10px] font-bold uppercase tracking-[0.3em] group-hover:gap-6 transition-all flex items-center gap-4 border-b border-gold/20 pb-2">
-                                        View Full History <ArrowDownUp size={12} />
-                                    </Link>
-                                </div>
-                            </div>
-
-                            <div className="bg-primary/40 backdrop-blur-3xl border border-gold/10 p-10 shadow-2xl">
-                                <div className="flex justify-between items-center mb-12 border-b border-gold/5 pb-8">
-                                    <h2 className="text-2xl font-light text-accent tracking-tighter">Recent <span className="text-gold font-medium">Transactions.</span></h2>
-                                </div>
-                                <div className="space-y-6">
-                                    <TransactionTable transactions={transactions} itemsPerPage={5} />
-                                </div>
+                                ))}
                             </div>
                         </div>
 
-                        <div className="space-y-12">
-                            <div className="group relative bg-primary items-center justify-center p-10 border border-gold/30 shadow-3xl overflow-hidden min-h-[400px] flex flex-col">
-                                <div className="absolute inset-0 bg-gold opacity-10 group-hover:opacity-20 transition-opacity duration-700" />
-                                <div className="absolute inset-0 bg-silk opacity-10" />
-                                <div className="relative z-10 text-center">
-                                    <p className="text-gold text-[8px] font-bold uppercase tracking-[0.6em] mb-6">Immediate Execution</p>
-                                    <h2 className="text-prestige text-5xl text-accent mb-8 leading-tight">Send <br /><span className="text-gold">Money.</span></h2>
-                                    <p className="text-accent/40 text-[10px] leading-relaxed mb-12 font-light max-w-xs mx-auto">
-                                        Send money locally or internationally with speed and security.
-                                    </p>
-                                    <button onClick={() => router.push('/transfer')} className="group/btn relative w-full bg-gold text-primary text-[10px] font-bold py-6 uppercase tracking-[0.4em] overflow-hidden transition-transform hover:scale-105 active:scale-95 shadow-2xl shadow-gold/20">
-                                        <span className="relative z-10">Send Now</span>
-                                        <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700" />
-                                    </button>
-                                </div>
-                                <ArrowDownUp size={180} className="absolute -bottom-16 -right-16 text-gold opacity-5 rotate-12 group-hover:rotate-0 transition-all duration-1000" />
+                        {/* Fast Transfer Shortcut */}
+                        <div className="rounded-2xl bg-gradient-to-br from-blue-950/50 to-slate-900 border border-sky-500/20 p-6 flex flex-col justify-between space-y-4">
+                            <div className="space-y-2">
+                                <span className="text-[10px] font-bold text-sky-400 uppercase tracking-wider">Fast Transfer</span>
+                                <h4 className="text-base font-bold text-white">Send funds globally in minutes</h4>
+                                <p className="text-xs text-slate-400 leading-relaxed">
+                                    Transfer directly to domestic banks, international SWIFT, or offshore accounts at zero hidden charges.
+                                </p>
                             </div>
-
-                            <div className="bg-primary/40 backdrop-blur-3xl border border-gold/10 p-10 shadow-2xl">
-                                <div className="text-[9px] text-gold font-bold uppercase tracking-[0.5em] mb-10 border-b border-gold/10 pb-4">Your Profile</div>
-                                <div className="space-y-8">
-                                    <div className="flex justify-between items-center gap-4">
-                                        <span className="text-[10px] text-accent/30 font-bold uppercase tracking-[0.3em] whitespace-nowrap text-left">Phone Number</span>
-                                        <span className="text-[10px] text-accent font-bold tracking-widest text-right break-all">{profile?.phoneNumber || "UNLINKED"}</span>
-                                    </div>
-                                    <div className="flex justify-between items-center gap-4">
-                                        <span className="text-[10px] text-accent/30 font-bold uppercase tracking-[0.3em] whitespace-nowrap text-left">Date of Birth</span>
-                                        <span className="text-[10px] text-accent font-bold tracking-widest text-right break-all">{profile?.dateOfBirth || "RESTRICTED"}</span>
-                                    </div>
-                                    <div className="flex justify-between items-center gap-4">
-                                        <span className="text-[10px] text-accent/30 font-bold uppercase tracking-[0.3em] whitespace-nowrap text-left">Address</span>
-                                        <span className="text-[10px] text-accent font-bold tracking-widest text-right break-words">{profile?.address || "GLOBAL"}</span>
-                                    </div>
-                                </div>
-                                <button onClick={() => router.push('/settings')} className="w-full mt-12 text-[8px] font-bold text-gold uppercase tracking-[0.5em] flex items-center justify-center gap-3 hover:gap-6 transition-all border border-gold/20 py-4 hover:bg-gold/5 transition-colors">
-                                    Edit Profile <ArrowRight size={12} />
-                                </button>
-                            </div>
+                            <Link
+                                href="/transfer"
+                                className="py-2.5 px-4 rounded-xl font-semibold text-xs text-slate-950 bg-sky-400 hover:bg-sky-300 transition-colors flex items-center justify-center gap-1.5 shadow-md shadow-sky-500/20"
+                            >
+                                <span>Start a Transfer</span>
+                                <ArrowRight size={14} />
+                            </Link>
                         </div>
                     </div>
 
-                    <div className="mt-32 -mx-6 md:-mx-12">
+                    {/* Recent Transactions Section */}
+                    <div className="space-y-4">
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <h3 className="text-base font-bold text-white">Recent Transactions</h3>
+                                <p className="text-xs text-slate-400">All outbound and inbound account settlements</p>
+                            </div>
+                            <Link href="/transactions" className="text-xs font-semibold text-sky-400 hover:underline">
+                                View all
+                            </Link>
+                        </div>
+
+                        <TransactionTable transactions={transactions} itemsPerPage={6} />
                     </div>
                 </div>
-            </div >
-        </main >
+            </div>
+        </main>
     )
 }

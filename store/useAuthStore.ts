@@ -15,26 +15,31 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     accessToken: typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null,
     isInitialized: false,
     setAuth: (user, accessToken, refreshToken) => {
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
+        }
         set({ user, accessToken });
     },
     setUser: (user) => {
-        localStorage.setItem('user', JSON.stringify(user));
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('user', JSON.stringify(user));
+        }
         set({ user });
     },
     logout: () => {
-        localStorage.removeItem('user');
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem('user');
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+        }
         set({ user: null, accessToken: null });
     },
     initialize: () => {
         const { accessToken } = get();
 
         if (!accessToken) {
-            // No access token at all — clear everything
             get().logout();
             set({ isInitialized: true });
             return;
@@ -46,12 +51,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             const refreshToken = typeof window !== 'undefined' ? localStorage.getItem('refreshToken') : null;
 
             if (isExpired && !refreshToken) {
-                // Both tokens gone — force clean logout
                 get().logout();
             }
-            // If expired but refresh token exists, the api.ts interceptor will handle it on first request
         } catch (e) {
-            // Malformed token — clear the session
             get().logout();
         }
 

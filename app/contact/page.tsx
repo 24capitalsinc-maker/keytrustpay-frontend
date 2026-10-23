@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Mail, Phone, MapPin, Send, Globe, ShieldCheck, Clock, MessageSquare } from 'lucide-react'
+import { Mail, Phone, MapPin, Send, Globe, ShieldCheck, Clock, MessageSquare, CheckCircle2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -11,16 +11,17 @@ import api from '@/lib/api'
 import { toast } from 'sonner'
 
 const contactSchema = z.object({
-    name: z.string().min(2, 'Identification required'),
-    email: z.string().email('Invalid institutional routing'),
-    subject: z.string().min(5, 'Specific subject required'),
-    message: z.string().min(10, 'Detailed communication required')
+    name: z.string().min(2, 'Please enter your name'),
+    email: z.string().email('Please enter a valid email address'),
+    subject: z.string().min(3, 'Please specify a subject'),
+    message: z.string().min(10, 'Please enter a message of at least 10 characters')
 })
 
 type ContactFormValues = z.infer<typeof contactSchema>
 
 export default function ContactPage() {
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [isSent, setIsSent] = useState(false)
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm<ContactFormValues>({
         resolver: zodResolver(contactSchema)
@@ -30,10 +31,11 @@ export default function ContactPage() {
         setIsSubmitting(true)
         try {
             await api.post('/public/contact', data)
-            toast.success('Communication Persisted: Institutional receipt acknowledged.')
+            toast.success('Thank you! Your message has been received.')
+            setIsSent(true)
             reset()
         } catch (error) {
-            toast.error('Transmission Failure: Please retry the secure channel.')
+            toast.error('Unable to send message right now. Please email support@keytrustpay.org directly.')
         } finally {
             setIsSubmitting(false)
         }
@@ -42,137 +44,168 @@ export default function ContactPage() {
     const fadeIn = {
         initial: { opacity: 0, y: 20 },
         animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.8, ease: "easeOut" as const }
+        transition: { duration: 0.6, ease: "easeOut" as const }
     }
 
     return (
-        <main className="min-h-screen bg-primary flex flex-col font-sans relative overflow-x-hidden">
+        <main className="min-h-screen bg-[#090D16] text-white flex flex-col font-sans relative overflow-x-hidden">
+            {/* Ambient gradients */}
+            <div className="absolute top-0 right-1/4 w-[800px] h-[450px] bg-gradient-to-b from-sky-500/15 via-cyan-500/5 to-transparent blur-3xl pointer-events-none" />
+
             <Navbar />
 
-            {/* Hero Section */}
-            <section className="relative pt-24 sm:pt-40 pb-12 sm:pb-20 px-4 sm:px-6 lg:px-12 border-b border-gold/10">
-                <div className="absolute inset-0 z-0 opacity-10 pointer-events-none mix-blend-overlay"
-                    style={{ backgroundImage: "url('https://static.wixstatic.com/media/c837a6_51db7f706561479b9f9f7570f739e702~mv2.png')", backgroundSize: 'cover' }} />
-
+            {/* Header */}
+            <section className="relative pt-36 pb-16 px-4 sm:px-6 lg:px-12 border-b border-slate-800/80">
                 <div className="max-w-7xl mx-auto relative z-10">
                     <motion.div {...fadeIn}>
-                        <p className="text-gold font-mono text-[10px] tracking-[0.4em] uppercase mb-6 flex items-center gap-3">
-                            <span className="w-8 h-[1px] bg-gold/30"></span> Secure Communication Node
-                        </p>
-                        <h1 className="text-4xl sm:text-5xl md:text-7xl font-light text-accent tracking-tighter mb-8 leading-[1.1]">
-                            Institutional <span className="font-medium text-gold">Inquiry.</span>
+                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium mb-6">
+                            <Mail size={14} />
+                            <span>Contact & Inquiries</span>
+                        </div>
+                        <h1 className="text-4xl sm:text-6xl font-bold tracking-tight mb-4 leading-[1.1]">
+                            Get in touch with <br />
+                            <span className="bg-gradient-to-r from-sky-400 via-cyan-300 to-emerald-400 bg-clip-text text-transparent">
+                                the KeyTrust Pay team.
+                            </span>
                         </h1>
-                        <p className="text-lg text-accent/50 max-w-2xl font-light leading-relaxed">
-                            Access our global network of specialist advisors and institutional relationship managers through our secure encrypted channel.
+                        <p className="text-base sm:text-lg text-slate-300 max-w-2xl font-normal leading-relaxed">
+                            Have questions about our personal checking, commercial accounts, or enterprise treasury? We're here to answer every question.
                         </p>
                     </motion.div>
                 </div>
             </section>
 
-            <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-12 relative">
-                <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-20">
-
-                    {/* Contact Information */}
-                    <div className="lg:col-span-5 space-y-12">
-                        <motion.div {...fadeIn} transition={{ delay: 0.2 }}>
-                            <h2 className="text-[10px] font-bold text-gold uppercase tracking-[0.4em] mb-10">Global Access Nodes</h2>
-                            <div className="grid gap-8">
+            {/* Content Grid */}
+            <section className="py-20 px-4 sm:px-6 lg:px-12 relative">
+                <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16">
+                    
+                    {/* Contact Details */}
+                    <div className="lg:col-span-5 space-y-8">
+                        <div>
+                            <h2 className="text-sm font-semibold text-cyan-400 uppercase tracking-wider mb-6">Our Contact Details</h2>
+                            <div className="space-y-6">
                                 {[
-                                    { icon: <Globe size={20} />, label: "Headquarters", val: "Sovereign District, Node 01, London" },
-                                    { icon: <Mail size={20} />, label: "Encrypted Email", val: "support@optimanexgen.org" },
-                                    { icon: <Phone size={20} />, label: "Institutional Hotline", val: "+1 (555) 240-0000" },
-                                    { icon: <Clock size={20} />, label: "Availability", val: "24/7 Global Coverage" }
+                                    { icon: <MapPin size={20} />, label: "Global Offices", val: "KeyTrust Pay Inc., Financial District, New York, NY & London, UK" },
+                                    { icon: <Mail size={20} />, label: "Support Email", val: "support@keytrustpay.org" },
+                                    { icon: <Phone size={20} />, label: "Client Hotline", val: "+1 (555) 240-0000" },
+                                    { icon: <Clock size={20} />, label: "Operating Hours", val: "24/7 Global Live Support" }
                                 ].map((item, i) => (
-                                    <div key={i} className="flex items-start gap-6 group">
-                                        <div className="w-12 h-12 border border-gold/20 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-primary transition-all duration-500">
+                                    <div key={i} className="flex items-start gap-4 p-4 rounded-2xl bg-slate-900/60 border border-slate-800">
+                                        <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0">
                                             {item.icon}
                                         </div>
                                         <div>
-                                            <p className="text-[10px] text-accent/30 font-bold uppercase tracking-widest mb-1">{item.label}</p>
-                                            <p className="text-accent text-sm font-light">{item.val}</p>
+                                            <p className="text-xs text-slate-400 font-medium mb-0.5">{item.label}</p>
+                                            <p className="text-white text-sm font-medium">{item.val}</p>
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                        </motion.div>
+                        </div>
 
-                        <motion.div {...fadeIn} transition={{ delay: 0.4 }} className="p-8 bg-primary-light border border-gold/5 flex gap-6 items-center">
-                            <div className="w-16 h-16 bg-gold/5 border border-dashed border-gold/20 flex items-center justify-center text-gold shrink-0">
-                                <ShieldCheck size={32} />
+                        <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-start gap-4">
+                            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+                                <ShieldCheck size={22} />
                             </div>
                             <div>
-                                <h3 className="text-sm font-medium text-accent uppercase tracking-widest mb-2">SOC 2 Type II Compliant</h3>
-                                <p className="text-xs text-accent/40 font-light leading-relaxed">All communications are encrypted using AES-256 and stored within our sovereign data vaults.</p>
+                                <h3 className="text-sm font-semibold text-white mb-1">SOC 2 Type II & AES-256 Security</h3>
+                                <p className="text-xs text-slate-400 leading-relaxed">
+                                    All communications and client records are encrypted with 256-bit SSL protocols and stored in fully certified secure data centers.
+                                </p>
                             </div>
-                        </motion.div>
+                        </div>
                     </div>
 
                     {/* Contact Form */}
-                    <div className="lg:col-span-1 border-l border-gold/5 hidden lg:block"></div>
-
-                    <div className="lg:col-span-6">
-                        <motion.div {...fadeIn} transition={{ delay: 0.3 }} className="bg-primary-light border border-gold/10 p-6 sm:p-8 md:p-12 shadow-2xl">
-                            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-bold text-accent/30 uppercase tracking-[0.2em] block">Full Name / Entity</label>
-                                        <input
-                                            {...register('name')}
-                                            className={`w-full bg-primary border ${errors.name ? 'border-red-500' : 'border-gold/10'} focus:border-gold outline-none p-3 sm:p-4 text-sm text-accent transition-all font-light`}
-                                            placeholder="John Doe / Acme Corp"
-                                        />
-                                        {errors.name && <p className="text-[9px] text-red-500 uppercase tracking-widest">{errors.name.message}</p>}
+                    <div className="lg:col-span-7">
+                        <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-8 sm:p-10 shadow-2xl backdrop-blur-xl">
+                            {isSent ? (
+                                <div className="text-center py-12 space-y-4">
+                                    <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mx-auto">
+                                        <CheckCircle2 size={32} />
                                     </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-bold text-accent/30 uppercase tracking-[0.2em] block">Institutional Email</label>
-                                        <input
-                                            {...register('email')}
-                                            className={`w-full bg-primary border ${errors.email ? 'border-red-500' : 'border-gold/10'} focus:border-gold outline-none p-3 sm:p-4 text-sm text-accent transition-all font-light`}
-                                            placeholder="john@institution.com"
-                                        />
-                                        {errors.email && <p className="text-[9px] text-red-500 uppercase tracking-widest">{errors.email.message}</p>}
+                                    <h3 className="text-2xl font-bold text-white">Message Delivered</h3>
+                                    <p className="text-slate-300 text-sm max-w-md mx-auto">
+                                        Thank you for reaching out to KeyTrust Pay. A specialist will review your inquiry and follow up within a few business hours.
+                                    </p>
+                                    <button
+                                        onClick={() => setIsSent(false)}
+                                        className="mt-4 px-6 py-2.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white text-xs font-semibold uppercase tracking-wider"
+                                    >
+                                        Send Another Message
+                                    </button>
+                                </div>
+                            ) : (
+                                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                                    <div>
+                                        <h3 className="text-2xl font-bold text-white mb-1">Send a Message</h3>
+                                        <p className="text-slate-400 text-sm">Fill out the form below and we'll reply to your email promptly.</p>
                                     </div>
-                                </div>
 
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-bold text-accent/30 uppercase tracking-[0.2em] block">Inquiry Priority / Subject</label>
-                                    <input
-                                        {...register('subject')}
-                                        className={`w-full bg-primary border ${errors.subject ? 'border-red-500' : 'border-gold/10'} focus:border-gold outline-none p-3 sm:p-4 text-sm text-accent transition-all font-light`}
-                                        placeholder="Institutional Liquidity Inquiry"
-                                    />
-                                    {errors.subject && <p className="text-[9px] text-red-500 uppercase tracking-widest">{errors.subject.message}</p>}
-                                </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-semibold text-slate-300 block">Full Name</label>
+                                            <input
+                                                {...register('name')}
+                                                className={`w-full bg-slate-950/60 border ${errors.name ? 'border-red-500' : 'border-slate-800'} focus:border-cyan-400 rounded-xl outline-none p-3.5 text-sm text-white transition-all placeholder:text-slate-600`}
+                                                placeholder="Sarah Jenkins"
+                                            />
+                                            {errors.name && <p className="text-xs text-red-400 mt-1">{errors.name.message}</p>}
+                                        </div>
 
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-bold text-accent/30 uppercase tracking-[0.2em] block">Communication Payload</label>
-                                    <textarea
-                                        {...register('message')}
-                                        rows={6}
-                                        className={`w-full bg-primary border ${errors.message ? 'border-red-500' : 'border-gold/10'} focus:border-gold outline-none p-3 sm:p-4 text-sm text-accent transition-all font-light resize-none`}
-                                        placeholder="Please provide comprehensive details regarding your inquiry..."
-                                    />
-                                    {errors.message && <p className="text-[9px] text-red-500 uppercase tracking-widest">{errors.message.message}</p>}
-                                </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-semibold text-slate-300 block">Email Address</label>
+                                            <input
+                                                {...register('email')}
+                                                type="email"
+                                                className={`w-full bg-slate-950/60 border ${errors.email ? 'border-red-500' : 'border-slate-800'} focus:border-cyan-400 rounded-xl outline-none p-3.5 text-sm text-white transition-all placeholder:text-slate-600`}
+                                                placeholder="sarah@example.com"
+                                            />
+                                            {errors.email && <p className="text-xs text-red-400 mt-1">{errors.email.message}</p>}
+                                        </div>
+                                    </div>
 
-                                <button
-                                    type="submit"
-                                    disabled={isSubmitting}
-                                    className="w-full bg-gold text-primary py-4 sm:py-5 font-bold text-[10px] uppercase tracking-[0.4em] hover:bg-gold-dark transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-4"
-                                >
-                                    {isSubmitting ? (
-                                        <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                                    ) : (
-                                        <>
-                                            <Send size={14} /> Transmit Protocol
-                                        </>
-                                    )}
-                                </button>
-                                <p className="text-[9px] text-accent/20 text-center italic tracking-widest underline underline-offset-4 decoration-gold/20">
-                                    By transmitting, you agree to our sovereign data encryption protocols.
-                                </p>
-                            </form>
-                        </motion.div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-semibold text-slate-300 block">Subject</label>
+                                        <input
+                                            {...register('subject')}
+                                            className={`w-full bg-slate-950/60 border ${errors.subject ? 'border-red-500' : 'border-slate-800'} focus:border-cyan-400 rounded-xl outline-none p-3.5 text-sm text-white transition-all placeholder:text-slate-600`}
+                                            placeholder="Question about Commercial Treasury"
+                                        />
+                                        {errors.subject && <p className="text-xs text-red-400 mt-1">{errors.subject.message}</p>}
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-semibold text-slate-300 block">Your Message</label>
+                                        <textarea
+                                            {...register('message')}
+                                            rows={5}
+                                            className={`w-full bg-slate-950/60 border ${errors.message ? 'border-red-500' : 'border-slate-800'} focus:border-cyan-400 rounded-xl outline-none p-3.5 text-sm text-white transition-all placeholder:text-slate-600 resize-none`}
+                                            placeholder="Please describe how we can assist you..."
+                                        />
+                                        {errors.message && <p className="text-xs text-red-400 mt-1">{errors.message.message}</p>}
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                        className="w-full bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-400 hover:to-sky-400 text-slate-950 py-4 rounded-xl font-semibold text-sm transition-all shadow-lg shadow-cyan-500/20 disabled:opacity-40 flex items-center justify-center gap-2"
+                                    >
+                                        {isSubmitting ? (
+                                            <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
+                                        ) : (
+                                            <>
+                                                <Send size={16} /> Send Message
+                                            </>
+                                        )}
+                                    </button>
+
+                                    <p className="text-xs text-slate-500 text-center">
+                                        We respect your privacy and will never share your personal information.
+                                    </p>
+                                </form>
+                            )}
+                        </div>
                     </div>
                 </div>
             </section>

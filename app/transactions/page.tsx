@@ -4,62 +4,75 @@ import Navbar from '@/components/Navbar'
 import Sidebar from '@/components/Sidebar'
 import TransactionTable from '@/components/TransactionTable'
 import api from '@/lib/api'
-import { Filter } from 'lucide-react'
+import { ArrowLeftRight, Download, RefreshCw } from 'lucide-react'
 
 export default function TransactionsPage() {
     const [transactions, setTransactions] = useState([])
     const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
-        const fetchTransactions = async () => {
-            try {
-                const res = await api.get('/transactions/my')
-                setTransactions(res.data)
-            } catch (err) {
-                // Handled via UI
-            } finally {
-                setLoading(false)
-            }
+    const fetchTransactions = async () => {
+        setLoading(true)
+        try {
+            const res = await api.get('/transactions/my')
+            setTransactions(res.data)
+        } catch (err) {
+            // Handled via UI
+        } finally {
+            setLoading(false)
         }
+    }
+
+    useEffect(() => {
         fetchTransactions()
     }, [])
 
     return (
-        <main className="min-h-screen bg-primary flex flex-col relative overflow-x-hidden">
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay" style={{ backgroundImage: "url('https://static.wixstatic.com/media/c837a6_51db7f706561479b9f9f7570f739e702~mv2.png')", backgroundSize: 'cover' }} />
+        <main className="min-h-screen bg-[#090D16] text-white flex flex-col relative overflow-x-hidden font-sans">
+            {/* Ambient gradients */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-gradient-to-b from-sky-500/15 via-cyan-500/5 to-transparent blur-3xl pointer-events-none" />
 
             <Navbar />
 
-            <div className="flex flex-1 pt-20">
+            <div className="flex flex-1 pt-16 relative z-10">
                 <Sidebar />
-                <div className="flex-1 min-w-0 p-4 sm:p-6 lg:p-12 lg:pl-80 z-10 overflow-hidden">
-                    <header className="mb-14 flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-gold/10 pb-10">
+                <div className="flex-1 min-w-0 p-4 sm:p-6 md:p-8 lg:pl-72 z-10 overflow-hidden">
+                    <header className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-6">
                         <div>
-                            <div className="flex items-center gap-3 mb-4">
-                                <span className="bg-gold/10 text-gold text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-gold/20">Audit Grade Ledger</span>
-                                <div className="h-[1px] w-8 bg-gold/20"></div>
+                            <div className="flex items-center gap-2 mb-2">
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
+                                    <ArrowLeftRight size={13} />
+                                    <span>Real-Time Settlements</span>
+                                </span>
                             </div>
-                            <h1 className="text-4xl md:text-5xl font-light text-accent tracking-tighter">
-                                Financial <span className="text-gold font-medium">Ledger.</span>
+                            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+                                Transaction <span className="text-cyan-400">History.</span>
                             </h1>
-                            <p className="text-accent/40 mt-3 text-sm tracking-wide font-light">Comprehensive analysis of your capital flow and institutional history.</p>
+                            <p className="text-slate-400 mt-1 text-xs sm:text-sm">
+                                Full ledger of your inbound credits, domestic wires, and international transfers.
+                            </p>
                         </div>
-                        <button className="flex items-center gap-3 bg-gold/5 border border-gold/20 px-6 py-3 text-[10px] font-bold text-gold uppercase tracking-[0.2em] hover:bg-gold/10 transition-all">
-                            <Filter size={14} /> Filter Activity
-                        </button>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={fetchTransactions}
+                                className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-colors flex items-center gap-2"
+                                title="Refresh transactions"
+                            >
+                                <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
+                                <span>Refresh</span>
+                            </button>
+                        </div>
                     </header>
 
                     <div className="min-h-[400px]">
                         {loading ? (
-                            <div className="flex flex-col items-center justify-center py-40 gap-6">
-                                <div className="w-10 h-10 border-2 border-gold border-t-transparent rounded-full animate-spin" />
-                                <p className="text-gold text-[10px] font-bold tracking-[0.4em] uppercase animate-pulse">Decrypting Ledger Data</p>
+                            <div className="flex flex-col items-center justify-center py-32 gap-4">
+                                <div className="w-10 h-10 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+                                <p className="text-cyan-400 text-xs font-semibold uppercase tracking-wider">Syncing Ledger...</p>
                             </div>
                         ) : (
-                            <TransactionTable transactions={transactions} />
+                            <TransactionTable transactions={transactions} itemsPerPage={10} />
                         )}
                     </div>
-
                 </div>
             </div>
         </main>

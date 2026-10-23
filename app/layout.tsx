@@ -17,12 +17,12 @@ const inter = Inter({
 })
 
 export const metadata = {
-    title: 'Optima Nexgen | Institutional Multi-Party Financial Governance',
-    description: 'Elite-tier digital banking specifically engineered for institutional liquidity management and secure global settlements.',
+    title: 'KeyTrust Pay | Modern Global Banking & Seamless Payments',
+    description: 'Effortless international transfers, multi-currency accounts, and bank-grade security built for modern businesses and individuals worldwide.',
     icons: {
-        icon: '/logo.png',
-        shortcut: '/logo.png',
-        apple: '/logo.png',
+        icon: '/favicon.png',
+        shortcut: '/favicon.png',
+        apple: '/favicon.png',
     }
 }
 
@@ -32,12 +32,12 @@ export default function RootLayout({
     children: React.ReactNode
 }) {
     return (
-        <html lang="en" className={`${outfit.variable} ${inter.variable} overflow-x-hidden max-w-[100vw] text-ellipsis`} data-scroll-behavior="smooth">
-            <body className="bg-primary text-slate-100 font-sans antialiased overflow-x-hidden max-w-[100vw]">
+        <html lang="en" className={`${outfit.variable} ${inter.variable} overflow-x-hidden max-w-[100vw] dark`} data-scroll-behavior="smooth">
+            <body className="bg-slate-950 text-slate-100 font-sans antialiased overflow-x-hidden max-w-[100vw] selection:bg-cyan-500/20 selection:text-cyan-300">
                 <SessionProvider>
                     <InactivityHandler />
                     <FaviconSync />
-                    <Toaster richColors position="top-right" closeButton />
+                    <Toaster richColors position="top-right" closeButton theme="dark" />
                     {children}
                 </SessionProvider>
             </body>

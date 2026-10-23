@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar'
 import AdminSidebar from '@/components/AdminSidebar'
 import api from '@/lib/api'
 import { motion } from 'framer-motion'
-import { Landmark, TrendingUp, TrendingDown, Activity, ShieldAlert, BarChart3, ArrowUpRight, ArrowDownRight } from 'lucide-react'
+import { Landmark, TrendingUp, TrendingDown, Activity, ShieldCheck, BarChart3, ArrowUpRight, ArrowDownRight } from 'lucide-react'
 
 export default function LiquidityPage() {
     const [stats, setStats] = useState<any>(null)
@@ -28,168 +28,147 @@ export default function LiquidityPage() {
     if (loading) return null
 
     return (
-        <div className="min-h-screen bg-primary flex flex-col font-sans selection:bg-gold/30">
+        <div className="min-h-screen bg-[#090D16] text-white flex flex-col font-sans">
             <Navbar />
 
             <div className="flex flex-1 pt-20">
                 <AdminSidebar />
                 <div className="flex-1 min-w-0 w-full overflow-hidden p-4 sm:p-6 md:p-10 lg:p-12 lg:pl-80 z-10">
-                    <header className="mb-14 border-b border-gold/10 pb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <header className="mb-10 border-b border-slate-800 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div>
-                            <div className="flex items-center gap-3 mb-4">
-                                <span className="text-[10px] text-gold font-bold uppercase tracking-[0.3em]">Protocol 00-LQ</span>
-                                <div className="h-[1px] w-8 bg-gold/20"></div>
+                            <div className="flex items-center gap-2 mb-3">
+                                <span className="text-xs text-cyan-400 font-semibold px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20">
+                                    Reserves & Flow
+                                </span>
                             </div>
-                            <h1 className="text-3xl sm:text-4xl md:text-5xl font-light text-accent tracking-tighter">
-                                Balance <span className="text-gold font-medium">Monitoring.</span>
+                            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+                                Liquidity <span className="text-cyan-400">Monitoring.</span>
                             </h1>
-                            <p className="text-accent/40 mt-3 text-xs sm:text-sm tracking-wide font-light">Real-time transparency and oversight of bank reserves.</p>
+                            <p className="text-slate-400 mt-2 text-sm font-normal">Real-time reserve health, 24-hour volume velocity, and strategic asset allocation.</p>
                         </div>
 
-                        <div className="flex items-center gap-4">
-                            <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 px-4 py-2 rounded-full">
-                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                                <span className="text-[9px] font-bold text-green-400 uppercase tracking-widest">Network Stable</span>
-                            </div>
+                        <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-3.5 py-1.5 rounded-full text-xs font-semibold text-emerald-400">
+                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                            <span>Reserve Health 100% Stable</span>
                         </div>
                     </header>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-                        {/* Core Liquidity Metrics */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6"
-                        >
-                            <div className="bg-primary-light/10 border border-gold/10 p-6 sm:p-8 relative overflow-hidden group">
-                                <div className="absolute top-0 left-0 w-full h-[1px] bg-gold/10" />
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+                        {/* Core Liquidity Cards */}
+                        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-8 shadow-2xl backdrop-blur-xl">
                                 <div className="flex justify-between items-start mb-6">
-                                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gold/5 border border-gold/20 flex items-center justify-center rounded-sm">
-                                        <Landmark size={18} className="text-gold" />
+                                    <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+                                        <Landmark size={24} />
                                     </div>
-                                    <span className="text-[9px] font-bold text-gold/40 uppercase tracking-widest">Aggregate Reserve</span>
+                                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Reserve</span>
                                 </div>
-                                <h3 className="text-3xl sm:text-4xl font-light text-accent tracking-tighter mb-2">${stats.totalLiquidity.toLocaleString()}</h3>
-                                <div className="flex items-center gap-2 text-green-500">
+                                <h3 className="text-3xl sm:text-4xl font-bold font-mono text-white mb-2">
+                                    ${stats?.totalLiquidity?.toLocaleString()}
+                                </h3>
+                                <div className="flex items-center gap-1.5 text-emerald-400 text-xs font-semibold">
                                     <TrendingUp size={14} />
-                                    <span className="text-[10px] font-bold uppercase tracking-widest">+4.2% Flow</span>
+                                    <span>+4.2% Net positive liquidity flow</span>
                                 </div>
                             </div>
 
-                            <div className="bg-primary-light/10 border border-gold/10 p-6 sm:p-8 relative overflow-hidden group">
-                                <div className="absolute top-0 left-0 w-full h-[1px] bg-gold/10" />
+                            <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-8 shadow-2xl backdrop-blur-xl">
                                 <div className="flex justify-between items-start mb-6">
-                                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gold/5 border border-gold/20 flex items-center justify-center rounded-sm">
-                                        <Activity size={18} className="text-gold" />
+                                    <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                                        <Activity size={24} />
                                     </div>
-                                    <span className="text-[9px] font-bold text-gold/40 uppercase tracking-widest">24h System Volume</span>
+                                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">24h System Flow</span>
                                 </div>
-                                <h3 className="text-3xl sm:text-4xl font-light text-accent tracking-tighter mb-2">${stats.volume24h.toLocaleString()}</h3>
-                                <p className="text-[10px] text-accent/30 uppercase tracking-[0.2em] font-bold">Total Network Liquidity Shift</p>
+                                <h3 className="text-3xl sm:text-4xl font-bold font-mono text-white mb-2">
+                                    ${stats?.volume24h?.toLocaleString()}
+                                </h3>
+                                <p className="text-xs text-slate-400">Settled within past 24 hours</p>
                             </div>
-                        </motion.div>
+                        </div>
 
-                        {/* Reserve Health Gauge */}
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 0.2 }}
-                            className="bg-primary-light/10 border border-gold/10 p-8 flex flex-col items-center justify-center text-center relative overflow-hidden"
-                        >
-                            <div className="absolute inset-0 bg-gold/[0.01] pointer-events-none" />
-                            <div className="relative w-40 h-40 mb-6">
+                        {/* Reserve Ratio Dial */}
+                        <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-8 flex flex-col items-center justify-center text-center shadow-2xl backdrop-blur-xl">
+                            <div className="relative w-36 h-36 mb-4">
                                 <svg className="w-full h-full -rotate-90">
-                                    <circle cx="80" cy="80" r="70" fill="transparent" stroke="currentColor" strokeWidth="8" className="text-gold/10" />
-                                    <circle cx="80" cy="80" r="70" fill="transparent" stroke="currentColor" strokeWidth="8" strokeDasharray="440" strokeDashoffset={440 - (440 * stats.reserveRatio) / 100} className="text-gold transition-all duration-1000" />
+                                    <circle cx="72" cy="72" r="60" fill="transparent" stroke="currentColor" strokeWidth="8" className="text-slate-800" />
+                                    <circle cx="72" cy="72" r="60" fill="transparent" stroke="currentColor" strokeWidth="8" strokeDasharray="377" strokeDashoffset={377 - (377 * (stats?.reserveRatio || 100)) / 100} className="text-cyan-400 transition-all duration-1000" />
                                 </svg>
                                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                    <span className="text-3xl font-light text-accent">{stats.reserveRatio}%</span>
-                                    <span className="text-[8px] font-bold text-gold/40 uppercase tracking-widest">Reserve</span>
+                                    <span className="text-2xl font-bold text-white font-mono">{stats?.reserveRatio}%</span>
+                                    <span className="text-[10px] text-cyan-400 font-semibold uppercase tracking-wider">Reserve</span>
                                 </div>
                             </div>
-                            <h4 className="text-[10px] font-bold text-accent uppercase tracking-[0.3em] mb-2">Institutional Health</h4>
-                            <p className="text-[9px] text-accent/30 uppercase tracking-widest leading-relaxed px-10">Total liquidity exceeds regulatory requirements.</p>
-                        </motion.div>
+                            <h4 className="text-sm font-semibold text-white mb-1">Capital Adequacy Ratio</h4>
+                            <p className="text-xs text-slate-400 px-4">Exceeds federal reserve requirements</p>
+                        </div>
                     </div>
 
                     <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
                         {/* Flow Patterns */}
-                        <div className="bg-primary-light/10 border border-gold/10 p-8 md:p-10 relative overflow-hidden">
-                            <div className="flex items-center gap-4 mb-10">
-                                <div className="w-8 h-8 bg-gold/5 border border-gold/20 flex items-center justify-center">
-                                    <BarChart3 size={16} className="text-gold" />
+                        <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-8 shadow-2xl backdrop-blur-xl">
+                            <div className="flex items-center gap-3 mb-8">
+                                <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+                                    <BarChart3 size={20} />
                                 </div>
-                                <h2 className="text-xl font-light tracking-tight text-accent">Flow <span className="text-gold">Analytics</span></h2>
+                                <div>
+                                    <h2 className="text-lg font-bold text-white">Flow Patterns (Past 12h)</h2>
+                                    <p className="text-xs text-slate-400">Inbound vs. Outbound Transfer Velocity</p>
+                                </div>
                             </div>
 
-                            <div className="flex items-end gap-2 h-48 md:h-64 mb-8">
-                                {stats.hourlyFlow.map((flow: any, i: number) => (
-                                    <div key={i} className="flex-1 flex items-end gap-[1px] h-full group relative">
-                                        <div className="flex-1 bg-gold/5 border border-gold/10 hover:bg-gold/20 transition-all relative" style={{ height: `${Math.max(10, (flow.inflow / 100000) * 100)}%` }}>
-                                            <div className="absolute inset-0 opacity-10 bg-gold" />
-                                        </div>
-                                        <div className="flex-1 bg-red-500/5 border border-red-500/10 hover:bg-red-500/20 transition-all relative" style={{ height: `${Math.max(5, (flow.outflow / 100000) * 100)}%` }}>
-                                            <div className="absolute inset-0 opacity-10 bg-red-500" />
-                                        </div>
-
-                                        {/* Hover Tooltip */}
-                                        <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-primary border border-gold/20 p-2 opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none text-nowrap">
-                                            <p className="text-[8px] font-bold text-gold uppercase tracking-tighter mb-1">{flow.hour}</p>
-                                            <div className="flex gap-3">
-                                                <span className="text-[8px] text-green-400">In: ${flow.inflow.toLocaleString()}</span>
-                                                <span className="text-[8px] text-red-400">Out: ${flow.outflow.toLocaleString()}</span>
-                                            </div>
-                                        </div>
+                            <div className="flex items-end gap-2 h-48 mb-6">
+                                {stats?.hourlyFlow?.map((flow: any, i: number) => (
+                                    <div key={i} className="flex-1 flex items-end gap-1 h-full group relative">
+                                        <div 
+                                            className="flex-1 bg-cyan-500/40 hover:bg-cyan-400 rounded-t-md transition-all" 
+                                            style={{ height: `${Math.max(15, (flow.inflow / 100000) * 100)}%` }} 
+                                        />
+                                        <div 
+                                            className="flex-1 bg-rose-500/40 hover:bg-rose-400 rounded-t-md transition-all" 
+                                            style={{ height: `${Math.max(10, (flow.outflow / 100000) * 100)}%` }} 
+                                        />
                                     </div>
                                 ))}
                             </div>
-                            <div className="flex justify-between mt-6 text-[8px] font-bold text-accent/20 uppercase tracking-[0.3em]">
-                                <span>12 Hours Ago</span>
-                                <span>Present Interval</span>
+                            <div className="flex justify-between text-xs text-slate-500">
+                                <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded bg-cyan-400" /> Inflows</span>
+                                <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded bg-rose-400" /> Outflows</span>
                             </div>
                         </div>
 
                         {/* Distribution Matrix */}
-                        <div className="bg-primary-light/10 border border-gold/10 p-8 md:p-10 relative overflow-hidden">
-                            <div className="flex items-center gap-4 mb-10">
-                                <div className="w-8 h-8 bg-gold/5 border border-gold/20 flex items-center justify-center">
-                                    <ShieldAlert size={16} className="text-gold" />
+                        <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-8 shadow-2xl backdrop-blur-xl">
+                            <div className="flex items-center gap-3 mb-8">
+                                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                                    <ShieldCheck size={20} />
                                 </div>
-                                <h2 className="text-xl font-light tracking-tight text-accent">Asset <span className="text-gold">Distribution</span></h2>
+                                <div>
+                                    <h2 className="text-lg font-bold text-white">Asset Distribution</h2>
+                                    <p className="text-xs text-slate-400">Liquidity Allocation by Currency & Node</p>
+                                </div>
                             </div>
 
-                            <div className="space-y-8">
-                                {stats.distribution.map((dist: any, i: number) => (
-                                    <div key={i} className="space-y-3">
-                                        <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest">
-                                            <span className="text-accent/60">{dist.label}</span>
-                                            <span className="text-gold">${dist.value.toLocaleString()}</span>
+                            <div className="space-y-6">
+                                {stats?.distribution?.map((dist: any, i: number) => (
+                                    <div key={i} className="space-y-2">
+                                        <div className="flex justify-between text-xs font-semibold">
+                                            <span className="text-slate-300">{dist.label}</span>
+                                            <span className="text-cyan-400 font-mono">${dist.value?.toLocaleString()}</span>
                                         </div>
-                                        <div className="w-full h-1 bg-gold/5 border border-gold/10">
+                                        <div className="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
                                             <motion.div
                                                 initial={{ width: 0 }}
-                                                animate={{ width: `${(dist.value / stats.totalLiquidity) * 100}%` }}
-                                                className="h-full bg-gold shadow-[0_0_10px_rgba(203,161,110,0.4)]"
+                                                animate={{ width: `${(dist.value / (stats.totalLiquidity || 1)) * 100}%` }}
+                                                className="h-full bg-gradient-to-r from-cyan-500 to-sky-500 rounded-full"
                                             />
                                         </div>
                                     </div>
                                 ))}
                             </div>
-
-                            <div className="mt-14 p-6 bg-gold/5 border border-gold/10 border-dashed flex items-start gap-4">
-                                <Activity size={18} className="text-gold mt-1" />
-                                <div>
-                                    <p className="text-[10px] font-bold text-accent uppercase tracking-widest mb-1">Entity Concentration</p>
-                                    <p className="text-[9px] text-accent/40 uppercase tracking-widest leading-relaxed font-light">
-                                        Liquidity is optimally distributed across {stats.entityCount} strategic institutional nodes.
-                                    </p>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     )
 }

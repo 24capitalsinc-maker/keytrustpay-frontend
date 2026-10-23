@@ -9,6 +9,7 @@ interface SettingsState {
         logoText: string;
         logoAccent: string;
         logoUrl: string;
+        faviconUrl?: string;
         supportEmail: string;
         isRegistrationEnabled?: boolean;
         socialLinks: {
@@ -23,11 +24,12 @@ interface SettingsState {
 
 export const useSettingsStore = create<SettingsState>((set) => ({
     settings: {
-        companyName: 'Optima Nexgen',
-        logoText: 'Optima',
-        logoAccent: 'Nexgen',
+        companyName: 'KeyTrust Pay',
+        logoText: 'KeyTrust',
+        logoAccent: 'Pay',
         logoUrl: '/logo.png',
-        supportEmail: 'support@optimanexgen.org',
+        faviconUrl: '/favicon.png',
+        supportEmail: 'support@keytrustpay.org',
         isRegistrationEnabled: true,
         socialLinks: {}
     },
@@ -39,11 +41,12 @@ export const useSettingsStore = create<SettingsState>((set) => ({
             // Fallback defaults
             set({
                 settings: {
-                    companyName: 'optimanexgen',
-                    logoText: 'optima',
-                    logoAccent: 'nexgen',
+                    companyName: 'KeyTrust Pay',
+                    logoText: 'KeyTrust',
+                    logoAccent: 'Pay',
                     logoUrl: '/logo.png',
-                    supportEmail: 'support@optimanexgen.org',
+                    faviconUrl: '/favicon.png',
+                    supportEmail: 'support@keytrustpay.org',
                     isRegistrationEnabled: true,
                     socialLinks: {}
                 }

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" width="72" height="72" fill="none">
+  <defs>
+    <linearGradient id="favShieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="50%" stop-color="#2563EB" />
+      <stop offset="100%" stop-color="#1D4ED8" />
+    </linearGradient>
+    <linearGradient id="favKeyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#93C5FD" />
+    </linearGradient>
+  </defs>
+
+  <rect width="72" height="72" rx="16" fill="#0B1120" />
+  
+  <!-- Shield Base -->
+  <path d="M36 10 C 52 10, 62 20, 62 34 C 62 53, 42 63, 36 67 C 30 63, 10 53, 10 34 C 10 20, 20 10, 36 10 Z" fill="url(#favShieldGrad)" />
+  <path d="M36 14 C 48 14, 56 22, 56 34 C 56 49, 39 57, 36 60 C 33 57, 16 49, 16 34 C 16 22, 24 14, 36 14 Z" fill="#0F172A" opacity="0.45" />
+
+  <!-- Key -->
+  <circle cx="36" cy="28" r="9" stroke="url(#favKeyGrad)" stroke-width="3.5" fill="none" />
+  <circle cx="36" cy="28" r="4" fill="url(#favKeyGrad)" />
+  <path d="M36 37 L36 52 M36 44 L42 44 M36 49 L40 49" stroke="url(#favKeyGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

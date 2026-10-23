@@ -1,21 +1,20 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import AdminSidebar from '@/components/AdminSidebar'
 import DashboardCard from '@/components/DashboardCard'
-import { Users, Repeat, Landmark, ShieldAlert } from 'lucide-react'
+import { Users, Repeat, Landmark, ShieldCheck } from 'lucide-react'
 import api from '@/lib/api'
 import { toast } from 'sonner'
 import Pagination from '@/components/Pagination'
-import { useMemo } from 'react'
 
 export default function AdminPage() {
     const [metrics, setMetrics] = useState<any>(null)
     const [users, setUsers] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
     const [currentPage, setCurrentPage] = useState(1)
-    const itemsPerPage = 5
+    const itemsPerPage = 6
 
     const paginatedUsers = useMemo(() => {
         const start = (currentPage - 1) * itemsPerPage
@@ -34,7 +33,7 @@ export default function AdminPage() {
                 setMetrics(mRes.data)
                 setUsers(uRes.data)
             } catch (err) {
-                toast.error('Failed to synchronize administrative metrics.')
+                toast.error('Failed to load administrative overview.')
             } finally {
                 setLoading(false)
             }
@@ -43,106 +42,115 @@ export default function AdminPage() {
     }, [])
 
     if (loading) return (
-        <main className="min-h-screen bg-primary flex items-center justify-center">
-            <div className="flex flex-col items-center gap-6">
-                <div className="w-12 h-12 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
-                <p className="text-red-500 text-[10px] font-bold tracking-[0.4em] uppercase animate-pulse">Accessing Secure Admin Vault</p>
+        <main className="min-h-screen bg-[#090D16] flex items-center justify-center">
+            <div className="flex flex-col items-center gap-4">
+                <div className="w-10 h-10 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+                <p className="text-cyan-400 text-xs font-semibold tracking-wider uppercase">Loading Admin Portal...</p>
             </div>
         </main>
     )
 
     return (
-        <main className="min-h-screen bg-primary flex flex-col relative overflow-hidden font-sans">
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay" style={{ backgroundImage: "url('https://static.wixstatic.com/media/c837a6_51db7f706561479b9f9f7570f739e702~mv2.png')", backgroundSize: 'cover' }} />
-
+        <main className="min-h-screen bg-[#090D16] text-white flex flex-col font-sans relative overflow-x-hidden">
             <Navbar />
 
             <div className="flex flex-1 pt-20">
                 <AdminSidebar />
                 <div className="flex-1 min-w-0 w-full overflow-hidden p-4 sm:p-6 md:p-10 lg:p-12 lg:pl-80 z-10">
-                    <header className="mb-14 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-gold/10 pb-10">
+                    <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-slate-800 pb-8">
                         <div>
-                            <div className="flex items-center gap-3 mb-4">
-                                <span className="bg-red-500/10 text-red-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-red-500/20 flex items-center gap-2">
-                                    <ShieldAlert size={10} /> Sovereign Access Active
+                            <div className="flex items-center gap-2 mb-3">
+                                <span className="bg-cyan-500/10 text-cyan-400 text-xs font-semibold px-3 py-1 rounded-full border border-cyan-500/20 flex items-center gap-1.5">
+                                    <ShieldCheck size={14} /> Admin Console
                                 </span>
-                                <div className="h-[1px] w-8 bg-red-500/20"></div>
                             </div>
-                            <h1 className="text-3xl sm:text-4xl md:text-5xl font-light text-accent tracking-tighter">
-                                Admin <span className="text-red-500 font-medium">Vault.</span>
+                            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+                                KeyTrust Pay <span className="text-cyan-400">Administration.</span>
                             </h1>
-                            <p className="text-accent/40 mt-3 text-xs sm:text-sm tracking-wide font-light">Global monitoring and administrative governance terminal.</p>
+                            <p className="text-slate-400 mt-2 text-sm font-normal">Real-time system telemetry, client management, and reserve monitoring.</p>
                         </div>
-                        <div className="flex items-center gap-4">
-                            <span className="text-[10px] text-accent/30 uppercase tracking-[0.3em]">Encrypted Session Level-4</span>
+                        <div className="flex items-center gap-2 text-xs text-slate-500 font-mono">
+                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                            <span>System Online & Operational</span>
                         </div>
                     </header>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-12 md:mb-16">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
                         <DashboardCard
                             title="Total Users"
                             value={metrics?.totalUsers}
                             icon={Users}
-                            subtitle="Registered Institutional Clients"
+                            subtitle="Registered KeyTrust Pay clients"
                         />
                         <DashboardCard
-                            title="Network Flow"
+                            title="Total Transactions"
                             value={metrics?.totalTransactions}
                             icon={Repeat}
-                            subtitle="Cumulative Ledger entries"
+                            subtitle="Processed ledger transfers"
                         />
                         <DashboardCard
-                            title="Bank Reserve"
+                            title="Bank Reserves"
                             value={`$${metrics?.totalBankBalance?.toLocaleString()}`}
                             icon={Landmark}
-                            subtitle="Aggregated Capital Liquidity"
+                            subtitle="Aggregated system liquidity"
                         />
                     </div>
 
-                    <div className="bg-primary-light/10 border border-gold/10 relative overflow-hidden group">
-                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gold/10" />
-                        <div className="p-6 md:p-10 border-b border-gold/10 flex justify-between items-center">
-                            <h2 className="text-xl md:text-2xl font-light text-accent tracking-tight">System <span className="text-gold">Users.</span></h2>
-                            <div className="h-0.5 w-8 md:w-12 bg-gold/20" />
+                    <div className="rounded-3xl bg-slate-900/80 border border-slate-800 shadow-2xl backdrop-blur-xl overflow-hidden">
+                        <div className="p-6 md:p-8 border-b border-slate-800 flex justify-between items-center">
+                            <div>
+                                <h2 className="text-xl font-bold text-white">Registered Users</h2>
+                                <p className="text-slate-400 text-xs mt-0.5">Overview of active and monitored accounts</p>
+                            </div>
+                            <Link 
+                                href="/admin/users" 
+                                className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors"
+                            >
+                                View All Users →
+                            </Link>
                         </div>
-                        <div className="overflow-x-auto w-full no-scrollbar">
+
+                        <div className="overflow-x-auto w-full">
                             <table className="w-full text-left">
                                 <thead>
-                                    <tr className="bg-gold/5 border-b border-gold/10 text-nowrap">
-                                        <th className="px-4 sm:px-10 py-5 md:py-6 text-[10px] font-bold uppercase tracking-[0.2em] text-accent/50">Entity</th>
-                                        <th className="px-4 sm:px-10 py-5 md:py-6 text-[10px] font-bold uppercase tracking-[0.2em] text-accent/50 hidden md:table-cell">Account</th>
-                                        <th className="px-4 sm:px-10 py-5 md:py-6 text-[10px] font-bold uppercase tracking-[0.2em] text-accent/50 text-right">Liquidity</th>
-                                        <th className="px-4 sm:px-10 py-5 md:py-6 text-[10px] font-bold uppercase tracking-[0.2em] text-accent/50 text-center hidden sm:table-cell">Security Status</th>
-                                        <th className="px-4 sm:px-10 py-5 md:py-6 text-[10px] font-bold uppercase tracking-[0.2em] text-accent/50 text-right">Actions</th>
+                                    <tr className="bg-slate-950/60 border-b border-slate-800 text-xs font-semibold uppercase tracking-wider text-slate-400 text-nowrap">
+                                        <th className="px-6 py-4">Client Name</th>
+                                        <th className="px-6 py-4 hidden md:table-cell">Account Number</th>
+                                        <th className="px-6 py-4 text-right">Available Balance</th>
+                                        <th className="px-6 py-4 text-center hidden sm:table-cell">Account Status</th>
+                                        <th className="px-6 py-4 text-right">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gold/5">
+                                <tbody className="divide-y divide-slate-800/60">
                                     {paginatedUsers.map((u: any) => (
-                                        <tr key={u._id} className="hover:bg-gold/5 transition-all group/row text-nowrap">
-                                            <td className="px-4 sm:px-10 py-6 md:py-8">
+                                        <tr key={u._id} className="hover:bg-slate-800/30 transition-colors text-nowrap">
+                                            <td className="px-6 py-5">
                                                 <div className="flex flex-col">
-                                                    <span className="font-light text-accent text-sm sm:text-base md:text-lg tracking-tight">{u.name}</span>
-                                                    <span className="text-[9px] sm:text-[10px] text-accent/30 uppercase tracking-[0.2em] font-bold">{u.email}</span>
+                                                    <span className="font-semibold text-white text-sm">{u.name}</span>
+                                                    <span className="text-xs text-slate-400">{u.email}</span>
                                                 </div>
                                             </td>
-                                            <td className="px-4 sm:px-10 py-6 md:py-8 hidden md:table-cell">
-                                                <span className="text-[10px] text-gold/60 font-bold uppercase tracking-widest border border-gold/10 px-3 py-1 bg-gold/5">
+                                            <td className="px-6 py-5 hidden md:table-cell">
+                                                <span className="font-mono text-xs text-slate-300 bg-slate-800/60 px-2.5 py-1 rounded-lg border border-slate-700">
                                                     {u.accountNumber}
                                                 </span>
                                             </td>
-                                            <td className="px-4 sm:px-10 py-6 md:py-8 text-right font-light text-accent text-base sm:text-lg md:text-xl tracking-tight">${u.accountBalance.toLocaleString()}</td>
-                                            <td className="px-4 sm:px-10 py-6 md:py-8 text-center hidden sm:table-cell">
-                                                <span className={`px-2 sm:px-4 py-1.5 text-[8px] sm:text-[9px] font-bold uppercase tracking-widest transition-all ${u.isFrozen
-                                                    ? 'bg-red-500/10 text-red-400 border border-red-500/20'
-                                                    : 'bg-gold/10 text-gold border border-gold/20'
-                                                    }`}>
-                                                    {u.isFrozen ? 'Frozen Asset' : 'Active Flow'}
+                                            <td className="px-6 py-5 text-right font-semibold text-white text-sm font-mono">
+                                                ${u.accountBalance?.toLocaleString()}
+                                            </td>
+                                            <td className="px-6 py-5 text-center hidden sm:table-cell">
+                                                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                                    u.isFrozen
+                                                        ? 'bg-red-500/10 text-red-400 border border-red-500/20'
+                                                        : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                                                }`}>
+                                                    {u.isFrozen ? 'Suspended' : 'Active'}
                                                 </span>
                                             </td>
-                                            <td className="px-4 sm:px-10 py-6 md:py-8 text-right">
+                                            <td className="px-6 py-5 text-right">
                                                 <Link
                                                     href="/admin/users"
-                                                    className="px-3 sm:px-6 py-2 sm:py-3 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] border border-gold/10 text-gold hover:bg-gold/5 transition-all inline-block"
+                                                    className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 border border-slate-700 transition-colors inline-block"
                                                 >
                                                     Manage
                                                 </Link>
@@ -152,13 +160,14 @@ export default function AdminPage() {
                                 </tbody>
                             </table>
                         </div>
-                        <Pagination
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            onPageChange={setCurrentPage}
-                        />
+                        <div className="p-4 border-t border-slate-800">
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={setCurrentPage}
+                            />
+                        </div>
                     </div>
-
                 </div>
             </div>
         </main>
