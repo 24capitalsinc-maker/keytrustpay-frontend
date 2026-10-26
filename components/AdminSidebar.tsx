@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion';
-import { ShieldCheck, Users, Activity, Landmark, Settings, LogOut, LayoutDashboard } from 'lucide-react'
+import { ShieldCheck, Users, Activity, Landmark, Settings, LogOut, LayoutDashboard, KeyRound } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuthStore } from '@/store/useAuthStore'
 
@@ -10,6 +10,7 @@ export const adminLinks = [
     { name: 'Dashboard Overview', href: '/admin', icon: ShieldCheck },
     { name: 'User Management', href: '/admin/users', icon: Users },
     { name: 'Transactions Ledger', href: '/admin/transactions', icon: Activity },
+    { name: 'Attempted Logins', href: '/admin/logins', icon: KeyRound },
     { name: 'Liquidity & Reserves', href: '/admin/liquidity', icon: Landmark },
     { name: 'Platform Settings', href: '/admin/governance', icon: Settings },
 ]
